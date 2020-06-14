@@ -1,12 +1,8 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  var Team = sequelize.define(
-    "team",
-    {
-      name: { type: DataTypes.STRING, unique: true },
-    },
-    { underscored: true }
-  );
+  var Team = sequelize.define("team", {
+    name: { type: DataTypes.STRING, unique: true },
+  });
 
   Team.associate = function (models) {
     // this will be a many to many

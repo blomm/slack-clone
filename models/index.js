@@ -19,7 +19,7 @@ var sequelize = new Sequelize(
   "slack",
   "postgres",
   "postgres",
-  { host: "localhost", dialect: "postgres" }
+  { host: "localhost", dialect: "postgres", define: { underscored: true } }
 );
 //}
 

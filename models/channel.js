@@ -1,13 +1,9 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  var Channel = sequelize.define(
-    "channel",
-    {
-      name: { type: DataTypes.STRING },
-      public: { type: DataTypes.BOOLEAN },
-    },
-    { underscored: true }
-  );
+  var Channel = sequelize.define("channel", {
+    name: { type: DataTypes.STRING },
+    public: { type: DataTypes.BOOLEAN },
+  });
 
   Channel.associate = function (models) {
     // models.channel.hasOne(models.team);

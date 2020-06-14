@@ -1,12 +1,8 @@
 "use strict";
 module.exports = (sequelize, DataTypes) => {
-  var Message = sequelize.define(
-    "message",
-    {
-      text: { type: DataTypes.STRING },
-    },
-    { underscored: true }
-  );
+  var Message = sequelize.define("message", {
+    text: { type: DataTypes.STRING },
+  });
 
   // we've describe the associate in
   // the user and channel

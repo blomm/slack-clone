@@ -5,12 +5,6 @@ const { gql } = require("apollo-server-express");
 // that together define the "shape" of queries that are executed against
 // your data.
 module.exports = gql`
-  type Team {
-    owner: User!
-    members: [User!]!
-    channels: [Channel!]!
-  }
-
   type Channel {
     id: Int!
     name: String!
@@ -19,20 +13,7 @@ module.exports = gql`
     users: [User!]!
   }
 
-  type Message {
-    id: Int!
-    text: String!
-    user: User!
-    channel: Channel!
-  }
-
-  type User {
-    id: Int!
-    username: String!
-    email: String!
-    teams: [Team!]!
-  }
   type Query {
-    hello: String
+    channels: String
   }
 `;

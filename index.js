@@ -5,8 +5,6 @@
 const express = require("express");
 const { ApolloServer, gql } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
-const typeDefs = require("./schema.js");
-const resolvers = require("./resolvers.js");
 const models = require("./models");
 // Construct a schema, using GraphQL schema language
 // A schema is a collection of type definitions (hence "typeDefs")
@@ -24,6 +22,9 @@ const models = require("./models");
 //     hello: (_parent, _args, _context, _server) => "Hello world!",
 //   },
 // };
+
+const typeDefs = require("./schema/typeDefs.js");
+const resolvers = require("./schema/resolvers.js");
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
