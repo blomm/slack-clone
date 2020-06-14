@@ -1,0 +1,28 @@
+{
+  "name": "slack-clone",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.10.1",
+    "@babel/core": "^7.10.2",
+    "@babel/preset-env": "^7.10.2",
+    "eslint": "^7.2.0",
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.10.1",
+    "apollo-server-express": "^2.14.3",
+    "graphql": "^15.1.0",
+    "graphql-tools": "^6.0.9",
+    "pg": "^8.2.1",
+    "sequelize": "^5.21.12"
+  }
+}
