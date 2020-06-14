@@ -16,6 +16,7 @@ module.exports = gql`
     name: String!
     pulic: Boolean!
     messages: [Message!]!
+    users: [User!]!
   }
 
   type Message {
