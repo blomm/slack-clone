@@ -16,9 +16,9 @@ module.exports = (sequelize, DataTypes) => {
     // 1:M
     models.user.hasMany(models.message);
 
-    // this will add a 'owner' field to teams
+    // this will add a 'owner_id' field to teams
     // with a reference to userId
-    models.user.hasOne(models.team, { as: "owner" });
+    models.user.hasOne(models.team, { foreignKey: "owner_id" });
   };
 
   return User;

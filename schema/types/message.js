@@ -13,6 +13,11 @@ module.exports = gql`
   }
 
   type Query {
-    messages: String
+    allMessages: [Message!]!
+    message(id: Int!): Message!
+  }
+
+  type Mutation {
+    createMessage(text: String!, channelId: Int): Boolean!
   }
 `;

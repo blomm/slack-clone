@@ -13,6 +13,11 @@ module.exports = gql`
   }
 
   type Query {
-    users: String
+    allUsers: [User!]!
+    user(id: Int!): User!
+  }
+
+  type Mutation {
+    createUser(username: String!, email: String!, password: String!): User!
   }
 `;

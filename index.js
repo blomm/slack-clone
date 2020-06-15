@@ -3,7 +3,7 @@
 // https://www.apollographql.com/blog/tutorial-building-a-graphql-server-cddaa023c035
 
 const express = require("express");
-const { ApolloServer, gql } = require("apollo-server-express");
+const { ApolloServer } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
 const models = require("./models");
 // Construct a schema, using GraphQL schema language
@@ -28,14 +28,19 @@ const resolvers = require("./schema/resolvers.js");
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
-const server = new ApolloServer({ schema });
+const server = new ApolloServer({
+  schema,
+  context: (_req, _res) => {
+    return { models, user: { id: 2 } };
+  },
+});
 
 const app = express();
 server.applyMiddleware({ app });
 
 // pass { force: true } to sync if we want to recreate
 // all the tables
-models.sequelize.sync({ force: true }).then(app.listen({ port: 4000 }));
+models.sequelize.sync().then(app.listen({ port: 4000 }));
 // app.listen({ port: 4000 }, () =>
 //   console.log(`Server ready at http://localhost:4000${server.graphqlPath}`)
 // );

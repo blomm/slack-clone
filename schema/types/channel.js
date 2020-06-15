@@ -13,7 +13,16 @@ module.exports = gql`
     users: [User!]!
   }
 
+  type Mutation {
+    createChannel(
+      name: String!
+      public: Boolean = false
+      teamId: Int!
+    ): Boolean!
+  }
+
   type Query {
-    channels: String
+    allChannels: [Channel!]!
+    channel(id: Int!): Channel!
   }
 `;

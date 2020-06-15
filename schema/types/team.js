@@ -6,12 +6,18 @@ const { gql } = require("apollo-server-express");
 // your data.
 module.exports = gql`
   type Team {
+    name: String!
     owner: User!
     members: [User!]!
     channels: [Channel!]!
   }
 
+  type Mutation {
+    createTeam(name: String!): Team!
+  }
+
   type Query {
-    teams: String
+    allTeams: [Team!]!
+    team(id: Int!): Team!
   }
 `;
