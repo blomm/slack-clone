@@ -30,10 +30,21 @@ const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 const server = new ApolloServer({
   schema,
-  context: (_req, _res) => {
+  context: (req, _res) => {
+    //const token = req.headers.authorization || "";
+
+    // try to retrieve a user with the token
+    //const user = token ? getUser(token) : {};
+
+    // add the user to the context
     return { models, user: { id: 2 } };
   },
 });
+
+const getUser = (token) => {
+  // should be querying the database
+  return { id: 2 };
+};
 
 const app = express();
 server.applyMiddleware({ app });

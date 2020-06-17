@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 // Provide resolver functions for your schema fields
 module.exports = {
   Query: {
@@ -6,7 +8,21 @@ module.exports = {
       models.user.findOne({ where: { id } }),
   },
   Mutation: {
-    createUser: (_parent, args, { models }, _server) =>
-      models.user.create(args),
+    register: async (
+      _parent,
+      { password, ...otherArgs },
+      { models },
+      _server
+    ) => {
+      try {
+        // hash the password before storing
+        const hashedPassword = await bcrypt.hash(password, 12);
+        await models.user.create({ ...otherArgs, password: hashedPassword });
+        return true;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
+    },
   },
 };
