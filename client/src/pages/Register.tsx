@@ -30,7 +30,6 @@ export const Register = () => {
   };
 
   const handleClick = (e: any) => {
-    debugger;
     register({
       variables: {
         username: registerDetails.username,
