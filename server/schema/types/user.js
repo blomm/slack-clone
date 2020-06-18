@@ -17,7 +17,17 @@ module.exports = gql`
     user(id: Int!): User!
   }
 
+  type RegisterResponse {
+    ok: Boolean!
+    user: User
+    errors: [Error!]
+  }
+
   type Mutation {
-    register(username: String!, email: String!, password: String!): Boolean!
+    register(
+      username: String!
+      email: String!
+      password: String!
+    ): RegisterResponse!
   }
 `;
