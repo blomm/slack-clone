@@ -38,8 +38,7 @@ export const Register = () => {
     email: "",
   });
   const handleChange = (e: any) => {
-    const name = e.target.name;
-    const value = e.target.value;
+    const { name, value } = e.target;
     setRegisterDetails({ ...registerDetails, [name]: value });
   };
 
