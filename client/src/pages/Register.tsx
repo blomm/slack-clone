@@ -3,11 +3,14 @@ import { Message, Button, Input, Container, Header } from "semantic-ui-react";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { useHistory } from "react-router";
+import { setAccessToken } from "../token";
 
 const REGISTER = gql`
   mutation register($username: String!, $email: String!, $password: String!) {
     register(username: $username, email: $email, password: $password) {
       ok
+      authToken
+      refreshToken
       errors {
         path
         message
@@ -27,6 +30,7 @@ export const Register = () => {
         console.log(errors);
         setRegisterDetails({ ...registerDetails, errors });
       } else if (ok) {
+        setAccessToken(data.register.authToken);
         history.push("/users");
       }
     },

@@ -46,47 +46,34 @@ module.exports = {
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) throw new ApolloError("Password failed", 401);
 
-      // create jwt
-      const authToken = auth.createAuthToken(user, auth_secret);
-      // combine the user's password with the refresh secret
-      // so if they reset the password, the old refresh token
-      // becomes invalid
-      const passwordControlledRefreshToken = user.password + refresh_secret;
-      const refreshToken = auth.createRefreshToken(
+      const { refreshToken, authToken } = auth.createTokens(
         user,
-        passwordControlledRefreshToken
+        refresh_secret,
+        auth_secret
       );
 
       return { authToken, refreshToken };
     },
     register: async (
       _parent,
-      { password, ...otherArgs },
-      { models },
+      args,
+      { models, auth_secret, refresh_secret },
       _server
     ) => {
       try {
-        if (password.length < 5 || password.length > 100) {
-          return {
-            ok: false,
-            errors: [
-              {
-                path: "password",
-                message:
-                  "The password needs to be between 5 and 100 characters",
-              },
-            ],
-          };
-        }
-        // hash the password before storing
-        const hashedPassword = await bcrypt.hash(password, 12);
-        const user = await models.user.create({
-          ...otherArgs,
-          password: hashedPassword,
-        });
-        return { ok: true, user };
+        const user = await models.user.create(args);
+
+        const { refreshToken, authToken } = auth.createTokens(
+          user,
+          refresh_secret,
+          auth_secret
+        );
+
+        return { ok: true, user, refreshToken, authToken };
       } catch (error) {
-        return { ok: false, errors: formatErrors(error) };
+        throw new ApolloError(`error ${error}`, 404);
+
+        //return { ok: false, errors: formatErrors(error) };
       }
     },
   },

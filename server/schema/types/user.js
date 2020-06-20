@@ -20,6 +20,8 @@ module.exports = gql`
   type RegisterResponse {
     ok: Boolean!
     user: User
+    authToken: String
+    refreshToken: String
     errors: [Error!]
   }
 
