@@ -2,10 +2,13 @@ import React from "react";
 
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
+import { Message, Container } from "semantic-ui-react";
 
 const GET_USERS = gql`
   {
     allUsers {
+      id
+      username
       email
     }
   }
@@ -16,11 +19,21 @@ export const Users = () => {
 
   if (loading) return <p>Loading...</p>;
   if (error) {
-    console.log(error);
-    return <p>error</p>;
+    return (
+      <Container text>
+        <Message negative>
+          <Message.Header>Unable to access data</Message.Header>
+
+          {error.graphQLErrors[0] ? (
+            <p>{error.graphQLErrors[0].message}</p>
+          ) : (
+            <p>{error.message}</p>
+          )}
+        </Message>
+      </Container>
+    );
   }
 
-  console.log(data);
   return (
     <>
       <div>Here are the users</div>

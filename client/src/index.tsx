@@ -7,10 +7,41 @@ import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
 import { onError } from "apollo-link-error";
-import { ApolloLink } from "apollo-link";
+import { ApolloLink, Observable } from "apollo-link";
 import { ApolloProvider } from "@apollo/react-hooks";
 
 import "semantic-ui-css/semantic.min.css";
+import { getAccessToken } from "./token";
+
+const request = async (operation) => {
+  const token = getAccessToken();
+  operation.setContext({
+    headers: {
+      authorization: token,
+    },
+  });
+};
+
+const requestLink = new ApolloLink(
+  (operation, forward) =>
+    new Observable((observer) => {
+      let handle;
+      Promise.resolve(operation)
+        .then((oper) => request(oper))
+        .then(() => {
+          handle = forward(operation).subscribe({
+            next: observer.next.bind(observer),
+            error: observer.error.bind(observer),
+            complete: observer.complete.bind(observer),
+          });
+        })
+        .catch(observer.error.bind(observer));
+
+      return () => {
+        if (handle) handle.unsubscribe();
+      };
+    })
+);
 
 const client = new ApolloClient({
   link: ApolloLink.from([
@@ -23,9 +54,10 @@ const client = new ApolloClient({
         );
       if (networkError) console.log(`[Network error]: ${networkError}`);
     }),
+    requestLink,
     new HttpLink({
       uri: "http://localhost:4000/graphql",
-      credentials: "same-origin",
+      credentials: "include",
     }),
   ]),
   cache: new InMemoryCache(),

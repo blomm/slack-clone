@@ -23,6 +23,15 @@ module.exports = gql`
     errors: [Error!]
   }
 
+  type LoginResponse {
+    authToken: String!
+    refreshToken: String!
+  }
+
+  type Mutation {
+    login(email: String!, password: String!): LoginResponse!
+  }
+
   type Mutation {
     register(
       username: String!

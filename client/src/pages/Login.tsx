@@ -1,31 +1,70 @@
 import React, { useState } from "react";
-import { Button, Input, Container, Header } from "semantic-ui-react";
+import { Message, Button, Input, Container, Header } from "semantic-ui-react";
+import { useMutation } from "@apollo/react-hooks";
+import gql from "graphql-tag";
+import { setAccessToken } from "../token";
+import { useHistory } from "react-router-dom";
+
+const LOGIN = gql`
+  mutation login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      authToken
+      refreshToken
+    }
+  }
+`;
 
 export const Login = () => {
+  const history = useHistory();
+
   const [loginDetails, setLoginDetails] = useState({
-    username: "",
+    email: "",
     password: "",
   });
+
+  const [login, { loading: loginLoading, error: loginError }] = useMutation(
+    LOGIN,
+    {
+      // While you can use the exposed error state to update
+      // your UI, doing so is not a substitute for actually handling
+      // the error. You must either provide an onError callback
+      // or catch the error
+      onError: (err: any) => {},
+      onCompleted: (data: any) => {
+        // TODO: store the refreshToken somewhere
+        setAccessToken(data.login.authToken);
+        history.push("/users");
+      },
+    }
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLoginDetails({ ...loginDetails, [name]: value });
   };
 
-  const handleClick = (e) => {
+  const handleSubmit = (e) => {
     // we could send an action to a reducer
     // but useMutation hook is easier
+    // wrapping a try catch here is an alternative to
+    // the mutations onError callback
+    login({
+      variables: {
+        email: loginDetails.email,
+        password: loginDetails.password,
+      },
+    });
   };
 
   return (
     <Container text>
       <Header as="h2">Login</Header>
       <Input
-        name="username"
+        name="email"
         onChange={handleChange}
-        value={loginDetails.username}
+        value={loginDetails.email}
         fluid
-        placeholder="Username"
+        placeholder="email"
       />
       <Input
         name="password"
@@ -35,7 +74,14 @@ export const Login = () => {
         fluid
         placeholder="Password"
       />
-      <Button content="Submit" onClick={handleClick} />
+      <Button content="Submit" onClick={handleSubmit} />
+      {loginLoading && <p>Loading...</p>}
+      {loginError && loginError.graphQLErrors.length && (
+        <Message
+          error
+          list={loginError.graphQLErrors.map((err) => err.message)}
+        />
+      )}
     </Container>
   );
 };
