@@ -2,20 +2,19 @@ const bcrypt = require("bcrypt");
 const { ApolloError } = require("apollo-server-express");
 const auth = require("../../auth.js");
 const formatErrors = require("../formatErrors");
+const { authenticated } = require("../guards/auth-guard");
 
 // Provide resolver functions for your schema fields
 module.exports = {
   Query: {
-    allUsers: async (_parent, _args, { models, user }, _server) => {
-      if (!user) throw new ApolloError("Not logged in", 401);
-
-      return await models.user.findAll();
-    },
-    user: async (_parent, { id }, { models, user }, _server) => {
-      if (!user) throw new ApolloError("Not logged in", 401);
-
+    allUsers: authenticated(
+      async (_parent, _args, { models, user }, _server) => {
+        return await models.user.findAll();
+      }
+    ),
+    user: authenticated(async (_parent, { id }, { models, user }, _server) => {
       return await models.user.findOne({ where: { id } });
-    },
+    }),
   },
   Mutation: {
     login: async (
