@@ -1,11 +1,54 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Users } from "./pages/Users";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Team } from "./pages/Team";
 import { Others } from "./pages/Others";
+import jwtDecode from "jwt-decode";
+import { getAccessToken } from "./token";
+
+const isAuthenticated = () => {
+  try {
+    const access = getAccessToken();
+    const refresh = localStorage.getItem("REFRESH_TOKEN");
+    if (access) {
+      jwtDecode(access);
+    } else if (refresh) {
+      jwtDecode(refresh);
+    }
+    return true;
+  } catch (err) {
+    return false;
+  }
+};
+
+const PrivateRoute = ({ children, ...rest }) => {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        isAuthenticated() ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
+  );
+};
 
 function App() {
   return (
@@ -43,7 +86,9 @@ function App() {
 
           <Route exact path="/login" component={Login}></Route>
           <Route exact path="/" component={Home}></Route>
-          <Route exact path="/team" component={Team}></Route>
+          <PrivateRoute path="/team">
+            <Team></Team>
+          </PrivateRoute>
         </Switch>
       </div>
     </Router>
