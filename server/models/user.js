@@ -30,7 +30,15 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      password: DataTypes.STRING,
+      password: {
+        type: DataTypes.STRING,
+        validate: {
+          len: {
+            args: [5, 100],
+            msg: "The password  must be between 5 and 100 characters",
+          },
+        },
+      },
     },
     {
       hooks: {

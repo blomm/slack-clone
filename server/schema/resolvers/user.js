@@ -1,20 +1,8 @@
 const bcrypt = require("bcrypt");
 const { ApolloError } = require("apollo-server-express");
 const auth = require("../../auth.js");
+const formatErrors = require("../formatErrors");
 
-// we can use this function to wrap any errors into an
-// error object and send back with a 200 response to be
-// interpreted on the frontend (and avoid handingling GraphQL errors)
-const formatErrors = (e) => {
-  try {
-    return e.errors.map((x) => {
-      let { path, message } = x;
-      return { path, message };
-    });
-  } catch (error) {
-    return [{ path: "unknown", message: "something went wrong" }];
-  }
-};
 // Provide resolver functions for your schema fields
 module.exports = {
   Query: {
@@ -71,9 +59,7 @@ module.exports = {
 
         return { ok: true, user, refreshToken, authToken };
       } catch (error) {
-        throw new ApolloError(`error ${error}`, 404);
-
-        //return { ok: false, errors: formatErrors(error) };
+        return { ok: false, errors: formatErrors(error) };
       }
     },
   },

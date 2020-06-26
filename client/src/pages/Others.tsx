@@ -14,7 +14,7 @@ const GET_USERS = gql`
   }
 `;
 
-export const Users = () => {
+export const Others = () => {
   let { loading, error, data } = useQuery(GET_USERS);
 
   if (loading) return <p>Loading...</p>;
@@ -23,6 +23,7 @@ export const Users = () => {
       <Container text>
         <Message negative>
           <Message.Header>Unable to access data</Message.Header>
+
           {error.graphQLErrors[0] ? (
             <p>{error.graphQLErrors[0].message}</p>
           ) : (
@@ -35,7 +36,7 @@ export const Users = () => {
 
   return (
     <>
-      <div>Here are the users</div>
+      <div>Here are the OTHER users</div>
       <ul>
         {data.allUsers.map((u: any, index: number) => (
           <li key={index}>{u.email}</li>

@@ -11,15 +11,23 @@ import { ApolloLink, Observable } from "apollo-link";
 import { ApolloProvider } from "@apollo/react-hooks";
 
 import "semantic-ui-css/semantic.min.css";
-import { getAccessToken } from "./token";
+import { getAccessToken, setAccessToken } from "./token";
 
 const request = async (operation) => {
-  const token = getAccessToken();
   operation.setContext({
-    headers: {
-      authorization: token,
-    },
+    headers: setHeaders(),
   });
+};
+
+const setHeaders = () => {
+  let headers = {
+    authorization: getAccessToken(),
+  };
+  const refresh = localStorage.getItem("REFRESH_TOKEN");
+  if (refresh) {
+    headers["x-refresh-token"] = refresh;
+  }
+  return headers;
 };
 
 const requestLink = new ApolloLink(
@@ -43,6 +51,28 @@ const requestLink = new ApolloLink(
     })
 );
 
+const readHeaderLink = new ApolloLink((operation, forward) => {
+  return forward(operation).map((response) => {
+    const context = operation.getContext();
+    const {
+      response: { headers },
+    } = context;
+
+    if (headers) {
+      const refreshToken = headers.get("x-refresh-token");
+      const authToken = headers.get("x-token");
+      if (refreshToken) {
+        localStorage.setItem("REFRESH_TOKEN", refreshToken);
+      }
+      if (authToken) {
+        setAccessToken(authToken);
+      }
+    }
+
+    return response;
+  });
+});
+
 const client = new ApolloClient({
   link: ApolloLink.from([
     onError(({ graphQLErrors, networkError }) => {
@@ -55,6 +85,7 @@ const client = new ApolloClient({
       if (networkError) console.log(`[Network error]: ${networkError}`);
     }),
     requestLink,
+    readHeaderLink,
     new HttpLink({
       uri: "http://localhost:4000/graphql",
       credentials: "include",

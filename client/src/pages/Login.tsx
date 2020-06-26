@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Message, Button, Input, Container, Header } from "semantic-ui-react";
+import {
+  Message,
+  Button,
+  Input,
+  Container,
+  Header,
+  Form,
+} from "semantic-ui-react";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { setAccessToken } from "../token";
@@ -33,7 +40,9 @@ export const Login = () => {
       onCompleted: (data: any) => {
         // TODO: store the refreshToken somewhere
         setAccessToken(data.login.authToken);
-        history.push("/users");
+        localStorage.setItem("REFRESH_TOKEN", data.login.refreshToken);
+
+        //history.push("/users");
       },
     }
   );
@@ -59,29 +68,35 @@ export const Login = () => {
   return (
     <Container text>
       <Header as="h2">Login</Header>
-      <Input
-        name="email"
-        onChange={handleChange}
-        value={loginDetails.email}
-        fluid
-        placeholder="email"
-      />
-      <Input
-        name="password"
-        onChange={handleChange}
-        value={loginDetails.password}
-        type="password"
-        fluid
-        placeholder="Password"
-      />
-      <Button content="Submit" onClick={handleSubmit} />
-      {loginLoading && <p>Loading...</p>}
-      {loginError && loginError.graphQLErrors.length && (
-        <Message
-          error
-          list={loginError.graphQLErrors.map((err) => err.message)}
-        />
-      )}
+      <Form>
+        <Form.Field>
+          <Input
+            name="email"
+            onChange={handleChange}
+            value={loginDetails.email}
+            fluid
+            placeholder="email"
+          />
+        </Form.Field>
+        <Form.Field>
+          <Input
+            name="password"
+            onChange={handleChange}
+            value={loginDetails.password}
+            type="password"
+            fluid
+            placeholder="Password"
+          />
+        </Form.Field>
+        <Button content="Submit" onClick={handleSubmit} />
+        {loginLoading && <p>Loading...</p>}
+        {loginError && loginError.graphQLErrors.length ? (
+          <Message
+            error
+            list={loginError.graphQLErrors.map((err) => err.message)}
+          />
+        ) : null}
+      </Form>
     </Container>
   );
 };

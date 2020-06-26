@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Message, Button, Input, Container, Header } from "semantic-ui-react";
+import {
+  Form,
+  Message,
+  Button,
+  Input,
+  Container,
+  Header,
+} from "semantic-ui-react";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { useHistory } from "react-router";
@@ -27,12 +34,16 @@ export const Register = () => {
     onCompleted: (data: any) => {
       const { ok, errors } = data.register;
       if (errors) {
-        console.log(errors);
         setRegisterDetails({ ...registerDetails, errors });
       } else if (ok) {
         setAccessToken(data.register.authToken);
+        localStorage.setItem("REFRESH_TOKEN", data.login.refreshToken);
         history.push("/users");
       }
+    },
+    onError: (err) => {
+      // console.log(`err ${err}`);
+      // loginError.graphQLErrors.map((err) => err.message)
     },
   });
   const [registerDetails, setRegisterDetails] = useState({
@@ -61,40 +72,52 @@ export const Register = () => {
   return (
     <Container text>
       <Header as="h2">Register</Header>
-      <Input
-        error={!!registerDetails.errors.find((x) => x.path === "username")}
-        name="username"
-        onChange={handleChange}
-        value={registerDetails.username}
-        fluid
-        placeholder="Username"
-      />
-      <Input
-        error={!!registerDetails.errors.find((x) => x.path === "email")}
-        name="email"
-        onChange={handleChange}
-        value={registerDetails.email}
-        fluid
-        placeholder="Email"
-      />
-      <Input
-        error={!!registerDetails.errors.find((x) => x.path === "password")}
-        name="password"
-        onChange={handleChange}
-        value={registerDetails.password}
-        type="password"
-        fluid
-        placeholder="Password"
-      />
-      <Button content="Submit" onClick={handleClick} />
+      <Form>
+        <Form.Field
+          error={!!registerDetails.errors.find((x) => x.path === "username")}
+        >
+          <Input
+            name="username"
+            onChange={handleChange}
+            value={registerDetails.username}
+            fluid
+            placeholder="Username"
+          />
+        </Form.Field>
+        <Form.Field
+          error={!!registerDetails.errors.find((x) => x.path === "email")}
+        >
+          <Input
+            name="email"
+            onChange={handleChange}
+            value={registerDetails.email}
+            fluid
+            placeholder="Email"
+          />
+        </Form.Field>
+        <Form.Field
+          error={!!registerDetails.errors.find((x) => x.path === "password")}
+        >
+          <Input
+            name="password"
+            onChange={handleChange}
+            value={registerDetails.password}
+            type="password"
+            fluid
+            placeholder="Password"
+          />
+        </Form.Field>
+
+        <Button content="Submit" onClick={handleClick} />
+      </Form>
       {mutationLoading && <p>Loading...</p>}
-      {registerDetails.errors.length > 0 && (
+      {registerDetails.errors.length ? (
         <Message
           error
           header="There was some errors with your submission"
           list={registerDetails.errors.map((err) => err.message)}
         />
-      )}
+      ) : null}
     </Container>
   );
 };
