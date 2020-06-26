@@ -6,4 +6,11 @@ module.exports = {
 
     return next(parent, args, context, server);
   },
+  validateRole: role => next => (parent, args, context, server) => {
+    if (context.user.role !== role) {
+        throw new Error(`Unauthorized`);
+    }
+  
+    return next(parent, args, context, server);
+  };
 };
