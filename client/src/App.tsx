@@ -14,6 +14,7 @@ import { Team } from "./pages/Team";
 import { Others } from "./pages/Others";
 import jwtDecode from "jwt-decode";
 import { getAccessToken } from "./token";
+import { TeamView } from "./pages/TeamView";
 
 const isAuthenticated = () => {
   try {
@@ -69,6 +70,9 @@ function App() {
               <Link to="/team">Create Team </Link>
             </li>
             <li>
+              <Link to="/team-view">View Team </Link>
+            </li>
+            <li>
               <Link to="/users">Users</Link>
             </li>
             <li>
@@ -86,6 +90,7 @@ function App() {
 
           <Route exact path="/login" component={Login}></Route>
           <Route exact path="/" component={Home}></Route>
+          <Route exact path="/team-view" component={TeamView}></Route>
           <PrivateRoute path="/team">
             <Team></Team>
           </PrivateRoute>
