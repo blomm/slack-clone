@@ -6,7 +6,6 @@ import {
   Link,
   Redirect,
 } from "react-router-dom";
-import { Home } from "./pages/Home";
 import { Users } from "./pages/Users";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
@@ -14,7 +13,8 @@ import { Team } from "./pages/Team";
 import { Others } from "./pages/Others";
 import jwtDecode from "jwt-decode";
 import { getAccessToken } from "./token";
-import { TeamView } from "./pages/TeamView";
+import { MainView } from "./pages/MainView";
+import "./App.css";
 
 const isAuthenticated = () => {
   try {
@@ -56,26 +56,23 @@ function App() {
     <Router>
       <div>
         <nav>
-          <ul>
-            <li>
+          <ul className="nav-items">
+            <li className="nav-item">
               <Link to="/">Home</Link>
             </li>
-            <li>
+            <li className="nav-item">
               <Link to="/login">Login</Link>
             </li>
-            <li>
+            <li className="nav-item">
               <Link to="/register">Register</Link>
             </li>
-            <li>
+            <li className="nav-item">
               <Link to="/team">Create Team </Link>
             </li>
-            <li>
-              <Link to="/team-view">View Team </Link>
-            </li>
-            <li>
+            <li className="nav-item">
               <Link to="/users">Users</Link>
             </li>
-            <li>
+            <li className="nav-item">
               <Link to="/others">Others</Link>
             </li>
           </ul>
@@ -87,10 +84,8 @@ function App() {
           <Route exact path="/register" component={Register}></Route>
           <Route exact path="/users" component={Users}></Route>
           <Route exact path="/others" component={Others}></Route>
-
           <Route exact path="/login" component={Login}></Route>
-          <Route exact path="/" component={Home}></Route>
-          <Route exact path="/team-view" component={TeamView}></Route>
+          <Route exact path="/" component={MainView}></Route>
           <PrivateRoute path="/team">
             <Team></Team>
           </PrivateRoute>
