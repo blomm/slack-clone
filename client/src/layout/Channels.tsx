@@ -19,6 +19,11 @@ const ChannelHeader = styled.h1`
   ${headerFontSize}
 `;
 
+const ChannelSubHeader = styled.div`
+  margin-top: 10px;
+  ${paddingLeft}
+`;
+
 const ChannelList = styled.ul`
   margin: 0;
   list-style: none;
@@ -56,14 +61,14 @@ export const Channels: React.FC<ChannelProps> = ({
   return (
     <ChannelsWrapper>
       <ChannelHeader>{teamName}</ChannelHeader>
-      <ChannelHeader>{userName}</ChannelHeader>
-      <ChannelHeader>Channels</ChannelHeader>
+      <ChannelSubHeader>{userName}</ChannelSubHeader>
+      <ChannelSubHeader>Channels</ChannelSubHeader>
       <ChannelList>
         {channels.map((c, i) => (
           <ChannelListItem key={i}># {c.name}</ChannelListItem>
         ))}
       </ChannelList>
-      <ChannelHeader>Direct messages</ChannelHeader>
+      <ChannelSubHeader>Direct messages</ChannelSubHeader>
       <ChannelList>
         {users.map((u, i) => (
           <ChannelListItem key={i}>

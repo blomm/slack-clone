@@ -13,9 +13,10 @@ const createRefreshToken = (user, refreshSecret) => {
 
 const createAuthToken = (user, authSecret) => {
   // choose the payload fields
+  // we don't want the password to go into the payload
   const { id, email, username } = user;
   return jwt.sign({ user: { id, email, username } }, authSecret, {
-    expiresIn: "6000",
+    expiresIn: "1d",
   });
 };
 

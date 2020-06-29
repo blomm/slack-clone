@@ -5,12 +5,20 @@ const { authenticated } = require("../guards/auth-guard");
 // Provide resolver functions for your schema fields
 module.exports = {
   Query: {
-    allTeams: authenticated((_parent, _args, { models }, _server) =>
-      models.team.findAll()
+    allTeams: authenticated((_parent, _args, { models, user }, _server) =>
+      models.team.findAll({ where: { owner_id: user.id } })
     ),
     team: authenticated((_parent, { id }, { models }, _server) =>
       models.team.findOne({ where: { id } })
     ),
+  },
+  Team: {
+    owner: (parent, _args, { models }, _server) =>
+      models.user.findOne({ where: { id: parent.owner_id } }),
+    channels: (parent, _args, { models }, _server) =>
+      models.channel.findAll({ where: { team_id: parent.id } }),
+    // users: (parent, _args, { models }, _server) =>
+    //   models.user.findAll()
   },
   Mutation: {
     createTeam: authenticated(

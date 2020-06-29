@@ -6,10 +6,11 @@ const { gql } = require("apollo-server-express");
 // your data.
 module.exports = gql`
   type Team {
+    id: Int!
     name: String!
-    owner: User!
-    members: [User!]!
-    channels: [Channel!]!
+    owner: User
+    members: [User!]
+    channels: [Channel!]
   }
 
   type CreateTeamResponse {
