@@ -48,6 +48,11 @@ export const SideBar = ({ currentTeam }) => {
     username = user.username;
   } catch (error) {}
 
+  // if theres no team withe the given id, return the first team
+  const team = data.allTeams.find((t) => t.id == currentTeam)
+    ? data.allTeams.find((t) => t.id == currentTeam)
+    : data.allTeams[0];
+
   return (
     <>
       <Teams
@@ -56,13 +61,13 @@ export const SideBar = ({ currentTeam }) => {
         })}
       ></Teams>
       <Channels
-        teamName={data.allTeams.find((t) => t.id == currentTeam).name}
+        teamName={team.name}
         userName={username}
         users={[
           { id: 1, name: "slackbot" },
           { id: 2, name: "user 2" },
         ]}
-        channels={data.allTeams.find((t) => t.id == currentTeam).channels}
+        channels={team.channels}
       ></Channels>
     </>
   );

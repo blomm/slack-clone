@@ -5,10 +5,10 @@ import { Messages } from "../layout/Messages";
 import SendMessage from "../layout/SendMessage";
 import { SideBar } from "../containers/SideBar";
 
-export const MainView = () => {
+export const MainView = ({ match: { params } }) => {
   return (
     <AppLayout>
-      <SideBar currentTeam={24}></SideBar>
+      <SideBar currentTeam={params.teamId}></SideBar>
       <Header channelName="general">Header</Header>
       <Messages>
         <ul>

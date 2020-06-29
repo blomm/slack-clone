@@ -25,9 +25,18 @@ module.exports = {
       async (_parent, args, { models, user }, _server) => {
         {
           try {
-            await models.team.create({ ...args, owner_id: user.id });
+            const newTeam = await models.team.create({
+              ...args,
+              owner_id: user.id,
+            });
+            await models.channel.create({
+              name: "general",
+              public: true,
+              teamId: newTeam.id,
+            });
             return {
               ok: true,
+              team: newTeam,
             };
           } catch (error) {
             return {

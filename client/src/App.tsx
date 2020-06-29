@@ -70,6 +70,9 @@ function App() {
               <Link to="/team">Create Team </Link>
             </li>
             <li className="nav-item">
+              <Link to="/view-team">View Team </Link>
+            </li>
+            <li className="nav-item">
               <Link to="/users">Users</Link>
             </li>
             <li className="nav-item">
@@ -85,7 +88,10 @@ function App() {
           <Route exact path="/users" component={Users}></Route>
           <Route exact path="/others" component={Others}></Route>
           <Route exact path="/login" component={Login}></Route>
-          <Route exact path="/" component={MainView}></Route>
+          <Route
+            path="/view-team/:teamId?/:channelId?"
+            component={MainView}
+          ></Route>
           <PrivateRoute path="/team">
             <Team></Team>
           </PrivateRoute>

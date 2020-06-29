@@ -15,6 +15,7 @@ module.exports = gql`
 
   type CreateTeamResponse {
     ok: Boolean!
+    team: Team
     errors: [Error!]
   }
 

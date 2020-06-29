@@ -9,11 +9,15 @@ import {
 } from "semantic-ui-react";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
+import { useHistory } from "react-router-dom";
 
 const CREATE_TEAM = gql`
   mutation createTeam($name: String!) {
     createTeam(name: $name) {
       ok
+      team {
+        id
+      }
       errors {
         path
         message
@@ -23,7 +27,12 @@ const CREATE_TEAM = gql`
 `;
 
 export const Team = () => {
+  const history = useHistory();
+
   const [createTeam, { data, error, loading }] = useMutation(CREATE_TEAM, {
+    onCompleted(data) {
+      history.push(`/view-team/${data.createTeam.team.id}`);
+    },
     onError(err) {},
   });
 
