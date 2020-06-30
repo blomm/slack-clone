@@ -8,9 +8,15 @@ module.exports = gql`
   type Channel {
     id: Int!
     name: String!
-    pulic: Boolean!
+    public: Boolean!
     messages: [Message!]!
     users: [User!]!
+  }
+
+  type CreateChannelResponse {
+    response: Boolean!
+    channel: Channel
+    errors: [Error]
   }
 
   type Mutation {
@@ -18,7 +24,7 @@ module.exports = gql`
       name: String!
       public: Boolean = false
       teamId: Int!
-    ): Boolean!
+    ): CreateChannelResponse!
   }
 
   type Query {

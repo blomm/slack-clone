@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import React from "react";
 import { Icon } from "semantic-ui-react";
+import { Link } from "react-router-dom";
 
 const ChannelsWrapper = styled.div`
   grid-column: 2;
@@ -46,30 +47,36 @@ const Bubble = ({ on = true }) => {
 };
 
 interface ChannelProps {
-  teamName: string;
+  team: Team;
   userName: string;
-  channels: any[];
   users: any;
   onAddChannelClick: any;
 }
 
+interface Team {
+  id: number;
+  name: string;
+  channels: any[];
+}
+
 export const Channels: React.FC<ChannelProps> = ({
-  teamName,
+  team,
   userName,
-  channels,
   users,
   onAddChannelClick,
 }) => {
   return (
     <ChannelsWrapper>
-      <ChannelHeader>{teamName}</ChannelHeader>
+      <ChannelHeader>{team.name}</ChannelHeader>
       <ChannelSubHeader>{userName}</ChannelSubHeader>
       <ChannelSubHeader>
         Channels <Icon onClick={onAddChannelClick} name="add circle"></Icon>
       </ChannelSubHeader>
       <ChannelList>
-        {channels.map((c, i) => (
-          <ChannelListItem key={i}># {c.name}</ChannelListItem>
+        {team.channels.map((c, i) => (
+          <Link to={`/view-team/${team.id}/${c.id}`} key={i}>
+            <ChannelListItem># {c.name}</ChannelListItem>
+          </Link>
         ))}
       </ChannelList>
       <ChannelSubHeader>Direct messages</ChannelSubHeader>

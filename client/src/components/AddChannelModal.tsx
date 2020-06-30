@@ -1,14 +1,19 @@
 import React from "react";
 import { Form, Input, Modal, Button } from "semantic-ui-react";
 import { useForm } from "react-hook-form";
-import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
+import { GET_TEAMS } from "../graphql/teams";
+import { CREATE_CHANNEL } from "../graphql/channels";
 
-const CREATE_CHANNEL = gql`
-  mutation createChannel($name: String!, $teamId: Int!, $public: Boolean) {
-    createChannel(name: $name, public: $public, teamId: $teamId)
-  }
-`;
+interface TeamsResponse {
+  allTeams: {
+    id: number;
+    channels: {
+      id: number;
+      name: string;
+    }[];
+  }[];
+}
 
 export const AddChannelModal = ({ open, handleClose, teamId }) => {
   // working with custom component ui make react-hook-form a bit more tricky
@@ -17,6 +22,36 @@ export const AddChannelModal = ({ open, handleClose, teamId }) => {
   const onSubmit = ({ channelName }) => {
     createChannel({
       variables: { name: channelName, public: false, teamId },
+      optimisticResponse: {
+        __typename: "Mutation",
+        createChannel: {
+          __typename: "CreateChannelResponse",
+          response: true,
+          errors: [],
+          channel: {
+            __typename: "Channel",
+            id: -1,
+            public: false,
+            name: channelName,
+          },
+        },
+      },
+      update: (proxy, { data: { createChannel } }) => {
+        debugger;
+        const { response, channel } = createChannel;
+        if (!response) {
+          return;
+        }
+        // Read the data from our cache for this query.
+        let data = proxy.readQuery({ query: GET_TEAMS }) as TeamsResponse;
+        //add the new channel to the team
+        data.allTeams.find((t) => t.id == teamId).channels.push(channel);
+        // Write our data back to the cache with the new channel in it
+        proxy.writeQuery({
+          query: GET_TEAMS,
+          data,
+        });
+      },
     });
   };
   const handleChange = (e) => {
@@ -29,7 +64,7 @@ export const AddChannelModal = ({ open, handleClose, teamId }) => {
     CREATE_CHANNEL,
     {
       onCompleted: (data: any) => {
-        handleClose();
+        if (data.createChannel) handleClose();
       },
       onError: (err: any) => {
         console.log("error: " + err);

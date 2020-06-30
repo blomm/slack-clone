@@ -1,28 +1,12 @@
 import React, { useState } from "react";
 import { useQuery } from "@apollo/react-hooks";
-import gql from "graphql-tag";
 import { Teams } from "../layout/Teams";
 import { Channels } from "../layout/Channels";
 import { Container, Message } from "semantic-ui-react";
 import jwtDecode from "jwt-decode";
 import { getAccessToken } from "../token";
 import { AddChannelModal } from "../components/AddChannelModal";
-
-const GET_TEAMS = gql`
-  {
-    allTeams {
-      id
-      name
-      owner {
-        email
-      }
-      channels {
-        id
-        name
-      }
-    }
-  }
-`;
+import { GET_TEAMS } from "../graphql/teams";
 
 export const SideBar = ({ currentTeam }) => {
   const { loading, error, data } = useQuery(GET_TEAMS);
@@ -72,13 +56,12 @@ export const SideBar = ({ currentTeam }) => {
         })}
       ></Teams>
       <Channels
-        teamName={team.name}
+        team={team}
         userName={username}
         users={[
           { id: 1, name: "slackbot" },
           { id: 2, name: "user 2" },
         ]}
-        channels={team.channels}
         onAddChannelClick={handleAddChannel}
       ></Channels>
       <AddChannelModal
