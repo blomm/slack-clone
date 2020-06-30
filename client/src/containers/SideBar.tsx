@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 import { Teams } from "../layout/Teams";
@@ -6,6 +6,7 @@ import { Channels } from "../layout/Channels";
 import { Container, Message } from "semantic-ui-react";
 import jwtDecode from "jwt-decode";
 import { getAccessToken } from "../token";
+import { AddChannelModal } from "../components/AddChannelModal";
 
 const GET_TEAMS = gql`
   {
@@ -25,6 +26,8 @@ const GET_TEAMS = gql`
 
 export const SideBar = ({ currentTeam }) => {
   const { loading, error, data } = useQuery(GET_TEAMS);
+
+  const [channelModalOpen, setChannelModalOpen] = useState(false);
 
   if (loading) return <p>Loading...</p>;
   if (error) {
@@ -48,10 +51,18 @@ export const SideBar = ({ currentTeam }) => {
     username = user.username;
   } catch (error) {}
 
-  // if theres no team withe the given id, return the first team
+  // if theres no team with the given teamId, return the first team
   const team = data.allTeams.find((t) => t.id == currentTeam)
     ? data.allTeams.find((t) => t.id == currentTeam)
     : data.allTeams[0];
+
+  const handleAddChannel = () => {
+    setChannelModalOpen(true);
+  };
+
+  const channelModalClosed = () => {
+    setChannelModalOpen(false);
+  };
 
   return (
     <>
@@ -68,7 +79,13 @@ export const SideBar = ({ currentTeam }) => {
           { id: 2, name: "user 2" },
         ]}
         channels={team.channels}
+        onAddChannelClick={handleAddChannel}
       ></Channels>
+      <AddChannelModal
+        open={channelModalOpen}
+        handleClose={channelModalClosed}
+        teamId={team.id}
+      />
     </>
   );
 };

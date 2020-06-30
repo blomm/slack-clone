@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import React from "react";
-import { link } from "fs";
+import { Icon } from "semantic-ui-react";
 
 const ChannelsWrapper = styled.div`
   grid-column: 2;
@@ -50,6 +50,7 @@ interface ChannelProps {
   userName: string;
   channels: any[];
   users: any;
+  onAddChannelClick: any;
 }
 
 export const Channels: React.FC<ChannelProps> = ({
@@ -57,12 +58,15 @@ export const Channels: React.FC<ChannelProps> = ({
   userName,
   channels,
   users,
+  onAddChannelClick,
 }) => {
   return (
     <ChannelsWrapper>
       <ChannelHeader>{teamName}</ChannelHeader>
       <ChannelSubHeader>{userName}</ChannelSubHeader>
-      <ChannelSubHeader>Channels</ChannelSubHeader>
+      <ChannelSubHeader>
+        Channels <Icon onClick={onAddChannelClick} name="add circle"></Icon>
+      </ChannelSubHeader>
       <ChannelList>
         {channels.map((c, i) => (
           <ChannelListItem key={i}># {c.name}</ChannelListItem>

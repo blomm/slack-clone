@@ -10,13 +10,15 @@ module.exports = {
     ),
   },
   Mutation: {
-    createMessage: authenticated((_parent, args, { models, user }, _server) => {
-      try {
-        models.message.create({ ...args, userId: user.id });
-        return true;
-      } catch (error) {
-        return false;
+    createMessage: authenticated(
+      async (_parent, args, { models, user }, _server) => {
+        try {
+          await models.message.create({ ...args, userId: user.id });
+          return true;
+        } catch (error) {
+          return false;
+        }
       }
-    }),
+    ),
   },
 };

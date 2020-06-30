@@ -10,9 +10,9 @@ module.exports = {
     ),
   },
   Mutation: {
-    createChannel: authenticated((_parent, args, { models }, _server) => {
+    createChannel: authenticated(async (_parent, args, { models }, _server) => {
       try {
-        models.channel.create(args);
+        await models.channel.create(args);
         return true;
       } catch (error) {
         return false;
