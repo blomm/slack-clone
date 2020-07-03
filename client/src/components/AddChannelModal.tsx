@@ -64,7 +64,7 @@ export const AddChannelModal = ({ open, handleClose, teamId }) => {
     CREATE_CHANNEL,
     {
       onCompleted: (data: any) => {
-        if (data.createChannel) handleClose();
+        if (data.createChannel) handleClose(false);
       },
       onError: (err: any) => {
         console.log("error: " + err);
@@ -73,7 +73,7 @@ export const AddChannelModal = ({ open, handleClose, teamId }) => {
   );
 
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open}>
       <Modal.Header>Create channel</Modal.Header>
       <Modal.Content>
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -86,7 +86,11 @@ export const AddChannelModal = ({ open, handleClose, teamId }) => {
             ></Input>
           </Form.Field>
           <Form.Group widths="equal">
-            <Button fluid content="Cancel" onClick={handleClose}></Button>
+            <Button
+              fluid
+              content="Cancel"
+              onClick={() => handleClose(false)}
+            ></Button>
             <Button fluid content="Create"></Button>
           </Form.Group>
         </Form>

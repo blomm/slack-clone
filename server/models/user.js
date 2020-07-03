@@ -51,10 +51,10 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function (models) {
     // M:M
-    models.user.belongsToMany(models.team, { through: "user_team" });
+    models.user.belongsToMany(models.team, { through: models.user_team });
 
     // M:M
-    models.user.belongsToMany(models.channel, { through: "user_channel" });
+    models.user.belongsToMany(models.channel, { through: models.user_channel });
 
     // 1:M
     models.user.hasMany(models.message);

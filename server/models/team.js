@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Team.associate = function (models) {
     // this will be a many to many
-    models.team.belongsToMany(models.user, { through: "user_team" });
+    models.team.belongsToMany(models.user, { through: models.user_team });
     // this will be a one to one
     // models.team.hasOne(models.user, { as: "owner" });
     // this will be a one to many

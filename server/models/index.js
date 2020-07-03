@@ -37,6 +37,8 @@ var models = {
   channel: sequelize.import("./channel"),
   message: sequelize.import("./message"),
   team: sequelize.import("./team"),
+  user_team: sequelize.import("./user_team"),
+  user_channel: sequelize.import("./user_channel"),
 };
 
 Object.keys(models).forEach((modelName) => {

@@ -4,9 +4,11 @@ import { Channels } from "../layout/Channels";
 import jwtDecode from "jwt-decode";
 import { getAccessToken } from "../token";
 import { AddChannelModal } from "../components/AddChannelModal";
+import { AddUserToTeamModal } from "../components/AddUserToTeamModal";
 
 export const SideBar = ({ currentTeam, teams }) => {
   const [channelModalOpen, setChannelModalOpen] = useState(false);
+  const [addUserToTeamModalOpen, setAddUserToTeamModalOpen] = useState(false);
 
   let username;
   try {
@@ -16,12 +18,12 @@ export const SideBar = ({ currentTeam, teams }) => {
 
   // if theres no team with the given teamId, return the first team
 
-  const handleAddChannel = () => {
-    setChannelModalOpen(true);
+  const handleAddChannel = (val: boolean) => {
+    setChannelModalOpen(val);
   };
 
-  const channelModalClosed = () => {
-    setChannelModalOpen(false);
+  const handleAddUserToTeam = (val: boolean) => {
+    setAddUserToTeamModalOpen(val);
   };
 
   return (
@@ -35,12 +37,18 @@ export const SideBar = ({ currentTeam, teams }) => {
           { id: 2, name: "user 2" },
         ]}
         onAddChannelClick={handleAddChannel}
+        onInvitePeopleClick={handleAddUserToTeam}
       ></Channels>
       <AddChannelModal
         open={channelModalOpen}
-        handleClose={channelModalClosed}
+        handleClose={handleAddChannel}
         teamId={currentTeam.id}
       />
+      <AddUserToTeamModal
+        open={addUserToTeamModalOpen}
+        handleClose={handleAddUserToTeam}
+        teamId={currentTeam.id}
+      ></AddUserToTeamModal>
     </>
   );
 };

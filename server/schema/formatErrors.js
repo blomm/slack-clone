@@ -8,6 +8,6 @@ module.exports = (e) => {
       return { path, message };
     });
   } catch (error) {
-    return [{ path: "unknown", message: "something went wrong" }];
+    return [{ path: "unknown", message: JSON.stringify(e) }];
   }
 };

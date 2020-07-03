@@ -15,3 +15,15 @@ export const GET_TEAMS = gql`
     }
   }
 `;
+
+export const ADD_USER_TO_TEAM = gql`
+  mutation addUserToTeam($email: String!, $teamId: Int!) {
+    addUserToTeam(email: $email, teamId: $teamId) {
+      ok
+      errors {
+        path
+        message
+      }
+    }
+  }
+`;

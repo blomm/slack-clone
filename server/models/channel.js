@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     models.channel.hasMany(models.message);
 
     // M:M
-    models.channel.belongsToMany(models.user, { through: "user_channel" });
+    models.channel.belongsToMany(models.user, { through: models.user_channel });
   };
 
   return Channel;

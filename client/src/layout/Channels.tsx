@@ -51,6 +51,7 @@ interface ChannelProps {
   userName: string;
   users: any;
   onAddChannelClick: any;
+  onInvitePeopleClick: any;
 }
 
 interface Team {
@@ -64,13 +65,15 @@ export const Channels: React.FC<ChannelProps> = ({
   userName,
   users,
   onAddChannelClick,
+  onInvitePeopleClick,
 }) => {
   return (
     <ChannelsWrapper>
       <ChannelHeader>{team.name}</ChannelHeader>
       <ChannelSubHeader>{userName}</ChannelSubHeader>
       <ChannelSubHeader>
-        Channels <Icon onClick={onAddChannelClick} name="add circle"></Icon>
+        Channels{" "}
+        <Icon onClick={() => onAddChannelClick(true)} name="add circle"></Icon>
       </ChannelSubHeader>
       <ChannelList>
         {team.channels.map((c, i) => (
@@ -87,6 +90,11 @@ export const Channels: React.FC<ChannelProps> = ({
           </ChannelListItem>
         ))}
       </ChannelList>
+      <div>
+        <a href="#invite-people" onClick={() => onInvitePeopleClick(true)}>
+          + Invite People
+        </a>
+      </div>
     </ChannelsWrapper>
   );
 };

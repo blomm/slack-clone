@@ -19,8 +19,20 @@ module.exports = gql`
     errors: [Error!]
   }
 
+  type NewUserInTeamResponse {
+    ok: Boolean!
+    errors: [Error!]
+    userTeam: UserTeam
+  }
+
+  type UserTeam {
+    user_id: Int!
+    team_id: Int!
+  }
+
   type Mutation {
     createTeam(name: String!): CreateTeamResponse!
+    addUserToTeam(email: String!, teamId: Int!): NewUserInTeamResponse!
   }
 
   type Query {
