@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/react-hooks";
 import { GET_TEAMS } from "../graphql/teams";
 import { CREATE_CHANNEL } from "../graphql/channels";
+import { useHistory } from "react-router-dom";
 
 interface TeamsResponse {
   allTeams: {
@@ -16,6 +17,7 @@ interface TeamsResponse {
 }
 
 export const AddChannelModal = ({ open, handleClose, teamId }) => {
+  const history = useHistory();
   // working with custom component ui make react-hook-form a bit more tricky
   // please see: https://react-hook-form.com/get-started#WorkwithUIlibrary
   const { register, handleSubmit, setValue } = useForm();
@@ -63,8 +65,11 @@ export const AddChannelModal = ({ open, handleClose, teamId }) => {
   const [createChannel, { loading, error, data }] = useMutation(
     CREATE_CHANNEL,
     {
-      onCompleted: (data: any) => {
-        if (data.createChannel) handleClose(false);
+      onCompleted: ({ createChannel }: any) => {
+        if (createChannel) {
+          handleClose(false);
+          history.push(`/view-team/${teamId}/${createChannel.channel.id}`);
+        }
       },
       onError: (err: any) => {
         console.log("error: " + err);

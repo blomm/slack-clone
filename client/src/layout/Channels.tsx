@@ -90,7 +90,7 @@ export const Channels: React.FC<ChannelProps> = ({
           </ChannelListItem>
         ))}
       </ChannelList>
-      <div>
+      <div style={{ paddingLeft: 10 }}>
         <a href="#invite-people" onClick={() => onInvitePeopleClick(true)}>
           + Invite People
         </a>

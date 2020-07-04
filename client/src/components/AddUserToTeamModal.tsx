@@ -34,8 +34,8 @@ export const AddUserToTeamModal = ({ open, handleClose, teamId }) => {
   const [addUserToTeam, { loading, error, data }] = useMutation(
     ADD_USER_TO_TEAM,
     {
-      onCompleted: (data: any) => {
-        if (data.addUserToTeam) handleClose(false);
+      onCompleted: ({ addUserToTeam }: any) => {
+        if (addUserToTeam.ok) handleClose(false);
       },
       onError: (err: any) => {
         console.log("error: " + err);
@@ -65,8 +65,11 @@ export const AddUserToTeamModal = ({ open, handleClose, teamId }) => {
             <Button fluid content="Add User"></Button>
           </Form.Group>
         </Form>
-        {error ? (
-          <Message error list={error.graphQLErrors.map((err) => err.message)} />
+        {data && data.addUserToTeam.errors ? (
+          <Message
+            error
+            list={data.addUserToTeam.errors.map((err) => err.message)}
+          />
         ) : null}
       </Modal.Content>
     </Modal>
