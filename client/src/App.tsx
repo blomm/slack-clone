@@ -30,6 +30,22 @@ const isAuthenticated = () => {
     return false;
   }
 };
+const PrivateRouteComponent = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={(props) =>
+      isAuthenticated() ? (
+        <Component {...props} />
+      ) : (
+        <Redirect
+          to={{
+            pathname: "/login",
+          }}
+        />
+      )
+    }
+  />
+);
 
 const PrivateRoute = ({ children, ...rest }) => {
   return (
@@ -67,7 +83,7 @@ function App() {
               <Link to="/register">Register</Link>
             </li>
             <li className="nav-item">
-              <Link to="/team">Create Team </Link>
+              <Link to="/create-team">Create Team </Link>
             </li>
             <li className="nav-item">
               <Link to="/view-team">View Team </Link>
@@ -88,11 +104,11 @@ function App() {
           <Route exact path="/users" component={Users}></Route>
           <Route exact path="/others" component={Others}></Route>
           <Route exact path="/login" component={Login}></Route>
-          <Route
+          <PrivateRouteComponent
             path="/view-team/:teamId?/:channelId?"
             component={MainView}
-          ></Route>
-          <PrivateRoute path="/team">
+          />
+          <PrivateRoute path="/create-team">
             <Team></Team>
           </PrivateRoute>
         </Switch>

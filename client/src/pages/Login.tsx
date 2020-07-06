@@ -42,7 +42,7 @@ export const Login = () => {
         setAccessToken(data.login.authToken);
         localStorage.setItem("REFRESH_TOKEN", data.login.refreshToken);
 
-        //history.push("/users");
+        history.push("/view-team");
       },
     }
   );

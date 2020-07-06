@@ -31,7 +31,9 @@ export const Team = () => {
 
   const [createTeam, { data, error, loading }] = useMutation(CREATE_TEAM, {
     onCompleted(data) {
-      history.push(`/view-team/${data.createTeam.team.id}`);
+      if (data && data.createTeam.ok && !data.createTeam.errors) {
+        history.push(`/view-team/${data.createTeam.team.id}`);
+      }
     },
     onError(err) {},
   });
@@ -69,14 +71,14 @@ export const Team = () => {
         <Message negative>
           <Message.Header>Unable to create team</Message.Header>
 
-          {error.graphQLErrors[0] ? (
+          {error.graphQLErrors && error.graphQLErrors.length ? (
             <p>{error.graphQLErrors[0].message}</p>
           ) : (
             <p>{error.message}</p>
           )}
         </Message>
       ) : null}
-      {data ? (
+      {data && data.createTeam.ok && !data.createTeam.errors ? (
         <Message positive>
           <Message.Header>Team created successfully</Message.Header>
         </Message>

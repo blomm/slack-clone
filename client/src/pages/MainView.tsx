@@ -7,8 +7,11 @@ import { SideBar } from "../containers/SideBar";
 import { GET_TEAMS } from "../graphql/teams";
 import { useQuery } from "@apollo/react-hooks";
 import { Container, Message } from "semantic-ui-react";
+import { RouteComponentProps, Redirect } from "react-router-dom";
 
-export const MainView = ({ match: { params } }) => {
+export const MainView: React.FC<RouteComponentProps<any>> = ({
+  match: { params },
+}) => {
   const { loading, error, data } = useQuery(GET_TEAMS);
 
   if (loading) return null;
@@ -26,12 +29,18 @@ export const MainView = ({ match: { params } }) => {
       </Container>
     );
   }
+  if (!data.allTeams.length) {
+    return <Redirect to="/create-team" />;
+  }
 
-  const team = data.allTeams.find((t) => t.id == params.teamId)
-    ? data.allTeams.find((t) => t.id == params.teamId)
+  let idInt = parseInt(params.teamId, 10);
+  let channelInt = parseInt(params.channelId, 10);
+
+  const team = data.allTeams.find((t) => t.id == idInt)
+    ? data.allTeams.find((t) => t.id == idInt)
     : data.allTeams[0];
-  const channel = team.channels.find((c) => c.id == params.channelId)
-    ? team.channels.find((c) => c.id == params.channelId)
+  const channel = team.channels.find((c) => c.id == channelInt)
+    ? team.channels.find((c) => c.id == channelInt)
     : team.channels[0];
 
   return (
@@ -42,13 +51,15 @@ export const MainView = ({ match: { params } }) => {
         })}
         currentTeam={team}
       ></SideBar>
-      <Header channelName={channel.name} />
-      <Messages channelId={channel.id}>
-        <ul>
-          <li>first item</li>
-          <li>second item</li>
-        </ul>
-      </Messages>
+      {channel && <Header channelName={channel.name} />}
+      {channel && (
+        <Messages channelId={channel.id}>
+          <ul>
+            <li>first item</li>
+            <li>second item</li>
+          </ul>
+        </Messages>
+      )}
       <SendMessage channelName={channel.name}></SendMessage>
     </AppLayout>
   );

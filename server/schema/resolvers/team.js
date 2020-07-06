@@ -1,6 +1,7 @@
 const formatErrors = require("../formatErrors");
 const { ApolloError } = require("apollo-server-express");
 const { authenticated } = require("../guards/auth-guard");
+const sequelize = require("sequelize");
 
 // Provide resolver functions for your schema fields
 module.exports = {
@@ -73,18 +74,22 @@ module.exports = {
     createTeam: authenticated(
       async (_parent, args, { models, user }, _server) => {
         try {
-          const newTeam = await models.team.create({
-            ...args,
-            owner_id: user.id,
-          });
-          await models.channel.create({
-            name: "general",
-            public: true,
-            teamId: newTeam.id,
+          const team = await models.sequelize.transaction(async () => {
+            const newTeam = await models.team.create({
+              ...args,
+              owner_id: user.id,
+            });
+
+            await models.channel.create({
+              name: "general",
+              public: true,
+              teamId: newTeam.id,
+            });
+            return newTeam;
           });
           return {
             ok: true,
-            team: newTeam,
+            team,
           };
         } catch (error) {
           return {

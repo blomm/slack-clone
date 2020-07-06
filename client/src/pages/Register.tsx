@@ -37,8 +37,8 @@ export const Register = () => {
         setRegisterDetails({ ...registerDetails, errors });
       } else if (ok) {
         setAccessToken(data.register.authToken);
-        localStorage.setItem("REFRESH_TOKEN", data.login.refreshToken);
-        history.push("/users");
+        localStorage.setItem("REFRESH_TOKEN", data.register.refreshToken);
+        history.push("/view-team");
       }
     },
     onError: (err) => {
