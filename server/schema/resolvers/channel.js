@@ -1,4 +1,4 @@
-const { authenticated } = require("../guards/auth-guard");
+const { authenticated, isTeamOwner } = require("../guards/auth-guard");
 const { formatErrors } = require("../formatErrors");
 // Provide resolver functions for your schema fields
 module.exports = {
@@ -11,19 +11,21 @@ module.exports = {
     ),
   },
   Mutation: {
-    createChannel: authenticated(async (_parent, args, { models }, _server) => {
-      try {
-        const channel = await models.channel.create(args);
-        return {
-          response: true,
-          channel,
-        };
-      } catch (error) {
-        return {
-          response: false,
-          errors: formatErrors(error),
-        };
-      }
-    }),
+    createChannel: authenticated(
+      isTeamOwner(async (_parent, args, { models }, _server) => {
+        try {
+          const channel = await models.channel.create(args);
+          return {
+            response: true,
+            channel,
+          };
+        } catch (error) {
+          return {
+            response: false,
+            errors: formatErrors(error),
+          };
+        }
+      })
+    ),
   },
 };

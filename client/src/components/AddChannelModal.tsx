@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, Modal, Button } from "semantic-ui-react";
+import { Message, Form, Input, Modal, Button } from "semantic-ui-react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/react-hooks";
 import { GET_TEAMS } from "../graphql/teams";
@@ -100,6 +100,17 @@ export const AddChannelModal = ({ open, handleClose, teamId }) => {
             <Button fluid content="Create"></Button>
           </Form.Group>
         </Form>
+        {error && (
+          <Message negative>
+            <Message.Header>Unable to create channel</Message.Header>
+
+            {error.graphQLErrors && error.graphQLErrors.length ? (
+              <p>{error.graphQLErrors[0].message}</p>
+            ) : (
+              <p>{error.message}</p>
+            )}
+          </Message>
+        )}
       </Modal.Content>
     </Modal>
   );

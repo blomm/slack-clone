@@ -19,7 +19,9 @@ const CREATE_TEAM = gql`
       team {
         id
         name
-        owner
+        owner {
+          id
+        }
       }
       errors {
         path

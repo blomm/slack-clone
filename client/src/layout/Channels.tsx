@@ -68,13 +68,19 @@ export const Channels: React.FC<ChannelProps> = ({
   onAddChannelClick,
   onInvitePeopleClick,
 }) => {
+  let isOwner = user.id === team.owner.id;
   return (
     <ChannelsWrapper>
       <ChannelHeader>{team.name}</ChannelHeader>
       <ChannelSubHeader>{user.userName}</ChannelSubHeader>
       <ChannelSubHeader>
         Channels{" "}
-        <Icon onClick={() => onAddChannelClick(true)} name="add circle"></Icon>
+        {isOwner ? (
+          <Icon
+            onClick={() => onAddChannelClick(true)}
+            name="add circle"
+          ></Icon>
+        ) : null}
       </ChannelSubHeader>
       <ChannelList>
         {team.channels.map((c, i) => (
@@ -91,7 +97,7 @@ export const Channels: React.FC<ChannelProps> = ({
           </ChannelListItem>
         ))}
       </ChannelList>
-      {user.id === team.owner.id ? (
+      {isOwner ? (
         <div style={{ paddingLeft: 10 }}>
           <a href="#invite-people" onClick={() => onInvitePeopleClick(true)}>
             + Invite People
