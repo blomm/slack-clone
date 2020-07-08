@@ -93,6 +93,7 @@ export const AddChannelModal = ({ open, handleClose, teamId }) => {
           <Form.Group widths="equal">
             <Button
               fluid
+              type="button"
               content="Cancel"
               onClick={() => handleClose(false)}
             ></Button>

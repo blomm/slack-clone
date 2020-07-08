@@ -48,7 +48,7 @@ const Bubble = ({ on = true }) => {
 
 interface ChannelProps {
   team: Team;
-  userName: string;
+  user: any;
   users: any;
   onAddChannelClick: any;
   onInvitePeopleClick: any;
@@ -56,13 +56,14 @@ interface ChannelProps {
 
 interface Team {
   id: number;
+  owner: any;
   name: string;
   channels: any[];
 }
 
 export const Channels: React.FC<ChannelProps> = ({
   team,
-  userName,
+  user,
   users,
   onAddChannelClick,
   onInvitePeopleClick,
@@ -70,7 +71,7 @@ export const Channels: React.FC<ChannelProps> = ({
   return (
     <ChannelsWrapper>
       <ChannelHeader>{team.name}</ChannelHeader>
-      <ChannelSubHeader>{userName}</ChannelSubHeader>
+      <ChannelSubHeader>{user.userName}</ChannelSubHeader>
       <ChannelSubHeader>
         Channels{" "}
         <Icon onClick={() => onAddChannelClick(true)} name="add circle"></Icon>
@@ -90,11 +91,13 @@ export const Channels: React.FC<ChannelProps> = ({
           </ChannelListItem>
         ))}
       </ChannelList>
-      <div style={{ paddingLeft: 10 }}>
-        <a href="#invite-people" onClick={() => onInvitePeopleClick(true)}>
-          + Invite People
-        </a>
-      </div>
+      {user.id === team.owner.id ? (
+        <div style={{ paddingLeft: 10 }}>
+          <a href="#invite-people" onClick={() => onInvitePeopleClick(true)}>
+            + Invite People
+          </a>
+        </div>
+      ) : null}
     </ChannelsWrapper>
   );
 };

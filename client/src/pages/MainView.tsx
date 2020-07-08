@@ -42,7 +42,6 @@ export const MainView: React.FC<RouteComponentProps<any>> = ({
   const channel = team.channels.find((c) => c.id == channelInt)
     ? team.channels.find((c) => c.id == channelInt)
     : team.channels[0];
-
   return (
     <AppLayout>
       <SideBar

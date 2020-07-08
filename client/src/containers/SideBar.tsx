@@ -10,10 +10,10 @@ export const SideBar = ({ currentTeam, teams }) => {
   const [channelModalOpen, setChannelModalOpen] = useState(false);
   const [addUserToTeamModalOpen, setAddUserToTeamModalOpen] = useState(false);
 
-  let username;
+  let user;
   try {
-    const { user } = jwtDecode(getAccessToken());
-    username = user.username;
+    user = jwtDecode(getAccessToken()).user;
+    //username = user.username;
   } catch (error) {}
 
   // if theres no team with the given teamId, return the first team
@@ -31,7 +31,7 @@ export const SideBar = ({ currentTeam, teams }) => {
       <Teams teams={teams}></Teams>
       <Channels
         team={currentTeam}
-        userName={username}
+        user={user}
         users={[
           { id: 1, name: "slackbot" },
           { id: 2, name: "user 2" },

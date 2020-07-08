@@ -7,6 +7,12 @@ const sequelize = require("sequelize");
 module.exports = {
   Query: {
     allTeams: authenticated((_parent, _args, { models, user }, _server) =>
+      //models.team.findAll({ where: { owner_id: user.id } })
+      models.team.findAll({
+        include: [{ model: models.user, where: { id: user.id } }],
+      })
+    ),
+    ownedTeams: authenticated((_parent, _args, { models, user }, _server) =>
       models.team.findAll({ where: { owner_id: user.id } })
     ),
     team: authenticated((_parent, { id }, { models }, _server) =>
@@ -83,6 +89,10 @@ module.exports = {
             await models.channel.create({
               name: "general",
               public: true,
+              teamId: newTeam.id,
+            });
+            await models.user_team.create({
+              userId: user.id,
               teamId: newTeam.id,
             });
             return newTeam;

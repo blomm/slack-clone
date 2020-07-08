@@ -10,7 +10,6 @@ import { Users } from "./pages/Users";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import { Team } from "./pages/Team";
-import { Others } from "./pages/Others";
 import jwtDecode from "jwt-decode";
 import { getAccessToken } from "./token";
 import { MainView } from "./pages/MainView";
@@ -91,9 +90,6 @@ function App() {
             <li className="nav-item">
               <Link to="/users">Users</Link>
             </li>
-            <li className="nav-item">
-              <Link to="/others">Others</Link>
-            </li>
           </ul>
         </nav>
 
@@ -102,7 +98,6 @@ function App() {
         <Switch>
           <Route exact path="/register" component={Register}></Route>
           <Route exact path="/users" component={Users}></Route>
-          <Route exact path="/others" component={Others}></Route>
           <Route exact path="/login" component={Login}></Route>
           <PrivateRouteComponent
             path="/view-team/:teamId?/:channelId?"

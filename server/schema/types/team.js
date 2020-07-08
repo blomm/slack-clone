@@ -37,6 +37,7 @@ module.exports = gql`
 
   type Query {
     allTeams: [Team!]!
+    ownedTeams: [Team!]!
     team(id: Int!): Team!
   }
 `;

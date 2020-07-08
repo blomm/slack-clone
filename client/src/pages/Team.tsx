@@ -10,6 +10,7 @@ import {
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/react-hooks";
 import { useHistory } from "react-router-dom";
+import { GET_TEAMS } from "../graphql/teams";
 
 const CREATE_TEAM = gql`
   mutation createTeam($name: String!) {
@@ -17,6 +18,8 @@ const CREATE_TEAM = gql`
       ok
       team {
         id
+        name
+        owner
       }
       errors {
         path
@@ -48,6 +51,22 @@ export const Team = () => {
     createTeam({
       variables: {
         name,
+      },
+      update: (proxy, { data: { createTeam } }) => {
+        debugger;
+        const { ok, team } = createTeam;
+        if (!ok) {
+          return;
+        }
+        // Read the data from our cache for this query.
+        let data = proxy.readQuery({ query: GET_TEAMS }) as any; // as TeamsResponse;
+        //add the new channel to the team
+        data.allTeams.push(team);
+        // Write our data back to the cache with the new channel in it
+        proxy.writeQuery({
+          query: GET_TEAMS,
+          data,
+        });
       },
     });
   };

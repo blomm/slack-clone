@@ -6,6 +6,7 @@ export const GET_TEAMS = gql`
       id
       name
       owner {
+        id
         email
       }
       channels {
