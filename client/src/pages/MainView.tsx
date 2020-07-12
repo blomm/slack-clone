@@ -8,6 +8,7 @@ import { GET_TEAMS } from "../graphql/teams";
 import { useQuery } from "@apollo/react-hooks";
 import { Container, Message } from "semantic-ui-react";
 import { RouteComponentProps, Redirect } from "react-router-dom";
+import { MessageContainer } from "../containers/MessageContainer";
 
 export const MainView: React.FC<RouteComponentProps<any>> = ({
   match: { params },
@@ -51,15 +52,11 @@ export const MainView: React.FC<RouteComponentProps<any>> = ({
         currentTeam={team}
       ></SideBar>
       {channel && <Header channelName={channel.name} />}
-      {channel && (
-        <Messages channelId={channel.id}>
-          <ul>
-            <li>first item</li>
-            <li>second item</li>
-          </ul>
-        </Messages>
-      )}
-      <SendMessage channelName={channel.name}></SendMessage>
+      {channel && <MessageContainer channelId={channel.id} />}
+      <SendMessage
+        channelName={channel.name}
+        channelId={channel.id}
+      ></SendMessage>
     </AppLayout>
   );
 };

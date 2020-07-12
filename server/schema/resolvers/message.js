@@ -5,9 +5,17 @@ module.exports = {
     message: authenticated((_parent, { id }, { models }, _server) =>
       models.message.findOne({ where: { id } })
     ),
-    allMessages: authenticated((_parent, _args, { models }, _server) =>
-      models.message.findAll()
+    channelMessages: authenticated(
+      (_parent, { channelId }, { models }, _server) =>
+        models.message.findAll({
+          order: [["createdAt", "ASC"]],
+          where: { channelId },
+        })
     ),
+  },
+  Message: {
+    user: (parent, _args, { models }, _server) =>
+      models.user.findOne({ where: { id: parent.userId } }),
   },
   Mutation: {
     createMessage: authenticated(

@@ -39,7 +39,6 @@ export const AddChannelModal = ({ open, handleClose, teamId }) => {
         },
       },
       update: (proxy, { data: { createChannel } }) => {
-        debugger;
         const { response, channel } = createChannel;
         if (!response) {
           return;
@@ -47,7 +46,7 @@ export const AddChannelModal = ({ open, handleClose, teamId }) => {
         // Read the data from our cache for this query.
         let data = proxy.readQuery({ query: GET_TEAMS }) as TeamsResponse;
         //add the new channel to the team
-        data.allTeams.find((t) => t.id == teamId).channels.push(channel);
+        data.allTeams.find((t) => t.id === teamId).channels.push(channel);
         // Write our data back to the cache with the new channel in it
         proxy.writeQuery({
           query: GET_TEAMS,

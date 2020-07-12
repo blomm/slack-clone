@@ -55,7 +55,6 @@ export const Team = () => {
         name,
       },
       update: (proxy, { data: { createTeam } }) => {
-        debugger;
         const { ok, team } = createTeam;
         if (!ok) {
           return;

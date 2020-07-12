@@ -8,12 +8,13 @@ module.exports = gql`
   type Message {
     id: Int!
     text: String!
-    user: User!
-    channel: Channel!
+    user: User
+    channel: Channel
+    createdAt: String!
   }
 
   type Query {
-    allMessages: [Message!]!
+    channelMessages(channelId: Int!): [Message]!
     message(id: Int!): Message!
   }
 
