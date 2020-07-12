@@ -16,12 +16,6 @@ export const MessageContainer = ({ channelId }) => {
   }
   return (
     <Messages>
-      <Comment.Group>
-        <Header as="h3" dividing>
-          Comments
-        </Header>
-      </Comment.Group>
-
       {data && data.channelMessages
         ? data.channelMessages.map((m, index) => (
             <Comment key={index}>
@@ -29,7 +23,16 @@ export const MessageContainer = ({ channelId }) => {
               <Comment.Content>
                 <Comment.Author as="a">{m.user.username}</Comment.Author>
                 <Comment.Metadata>
-                  <div>{m.createdAt}</div>
+                  <div>
+                    {new Intl.DateTimeFormat("en-GB", {
+                      year: "numeric",
+                      month: "long",
+                      day: "2-digit",
+                      hour: "numeric",
+                      minute: "numeric",
+                      second: "numeric",
+                    }).format(m.createdAt)}
+                  </div>
                 </Comment.Metadata>
                 <Comment.Text>{m.text}</Comment.Text>
                 <Comment.Actions>

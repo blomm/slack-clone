@@ -8,7 +8,7 @@ module.exports = {
     channelMessages: authenticated(
       (_parent, { channelId }, { models }, _server) =>
         models.message.findAll({
-          order: [["createdAt", "ASC"]],
+          order: [["createdAt", "DESC"]],
           where: { channelId },
         })
     ),
