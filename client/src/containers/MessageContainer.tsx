@@ -37,7 +37,7 @@ export const MessageContainer = ({ channelId }) => {
 
   React.useEffect(() => {
     subscribeToNewComments();
-  }, []);
+  }, [channelId]);
 
   if (error) {
     return <div>error</div>;
