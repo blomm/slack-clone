@@ -3,6 +3,10 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
+import { WebSocketLink } from "apollo-link-ws";
+import { split } from "apollo-link";
+import { getMainDefinition } from "apollo-utilities";
+
 import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { HttpLink } from "apollo-link-http";
@@ -73,8 +77,44 @@ const readHeaderLink = new ApolloLink((operation, forward) => {
   });
 });
 
-const client = new ApolloClient({
-  link: ApolloLink.from([
+// const t = getAccessToken();
+// console.log(`token is ${t}`);
+const wsLink = new WebSocketLink({
+  uri: `ws://localhost:4000/subscriptions`,
+  options: {
+    reconnect: true,
+    connectionParams: {
+      // we may not have the access token available when user tries to create web-socket-link
+      // in which case we'll need to use the refresh token and check this server side
+      authToken: getAccessToken(),
+      refreshToken: localStorage.getItem("REFRESH_TOKEN"),
+    },
+  },
+});
+const httpLink = new HttpLink({
+  uri: "http://localhost:4000/graphql",
+  credentials: "include",
+});
+
+const getWebSocketLinks = () => {
+  return ApolloLink.from([
+    onError(({ graphQLErrors, networkError }) => {
+      if (graphQLErrors)
+        graphQLErrors.forEach(({ message, locations, path }) =>
+          console.log(
+            `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+          )
+        );
+      if (networkError) console.log(`[Network error]: ${networkError}`);
+    }),
+    requestLink,
+    //readHeaderLink,
+    wsLink,
+  ]);
+};
+
+const getHttpLinks = () => {
+  return ApolloLink.from([
     onError(({ graphQLErrors, networkError }) => {
       if (graphQLErrors)
         graphQLErrors.forEach(({ message, locations, path }) =>
@@ -86,11 +126,26 @@ const client = new ApolloClient({
     }),
     requestLink,
     readHeaderLink,
-    new HttpLink({
-      uri: "http://localhost:4000/graphql",
-      credentials: "include",
-    }),
-  ]),
+    httpLink,
+  ]);
+};
+// queries and mutations will go over HTTP as normal, but
+// subscriptions will be done over the websocket transport.
+const link = split(
+  // split based on operation type
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
+  },
+  getWebSocketLinks(),
+  getHttpLinks()
+);
+
+const client = new ApolloClient({
+  link,
   cache: new InMemoryCache(),
 });
 

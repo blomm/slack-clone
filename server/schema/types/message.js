@@ -13,6 +13,10 @@ module.exports = gql`
     createdAt: String!
   }
 
+  type Subscription {
+    messageAdded(channelId: Int!): Message
+  }
+
   type Query {
     channelMessages(channelId: Int!): [Message]!
     message(id: Int!): Message!

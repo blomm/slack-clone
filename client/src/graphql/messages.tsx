@@ -6,7 +6,7 @@ export const CREATE_MESSAGE = gql`
   }
 `;
 
-export const GET_CHANNEL_MESSAGES = gql`
+export const GET_MESSAGES_FOR_CHANNEL = gql`
   query channelMessages($channelId: Int!) {
     channelMessages(channelId: $channelId) {
       id
@@ -18,3 +18,29 @@ export const GET_CHANNEL_MESSAGES = gql`
     }
   }
 `;
+
+export const MESSAGES_SUBSCRIPTION = gql`
+  subscription messageAdded($channelId: Int!) {
+    messageAdded(channelId: $channelId) {
+      id
+      text
+      user {
+        username
+      }
+      createdAt
+    }
+  }
+`;
+
+// export const MESSAGES_SUBSCRIPTION = gql`
+//   subscription messageAdded($channelId: Int!) {
+//     messageAdded(channelId: $channelId) {
+//       id
+//       text
+//       user {
+//         username
+//       }
+//       createdAt
+//     }
+//   }
+// `;

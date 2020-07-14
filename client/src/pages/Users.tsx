@@ -2,7 +2,7 @@ import React from "react";
 
 import { useQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
-import { Button, Message, Container } from "semantic-ui-react";
+import { Message, Container } from "semantic-ui-react";
 
 const GET_USERS = gql`
   {

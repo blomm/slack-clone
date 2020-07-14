@@ -12,11 +12,11 @@ const SendMessageWrapper = styled.div`
 `;
 
 export default ({ channelName, channelId }) => {
-  const [creatMessage, { loading, error, data }] = useMutation(CREATE_MESSAGE);
-  const { register, handleSubmit, setValue, reset } = useForm();
+  const [createMessage] = useMutation(CREATE_MESSAGE);
+  const { register, handleSubmit, setValue } = useForm();
 
   const onSubmit = async (data, e) => {
-    await creatMessage({
+    await createMessage({
       variables: {
         text: data.messageInput,
         channelId,

@@ -2,8 +2,6 @@ import React from "react";
 import { Form, Message, Input, Modal, Button } from "semantic-ui-react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/react-hooks";
-import { GET_TEAMS } from "../graphql/teams";
-// import { CREATE_CHANNEL } from "../graphql/channels";
 import { ADD_USER_TO_TEAM } from "../graphql/teams";
 
 // interface TeamsResponse {
@@ -31,17 +29,14 @@ export const AddUserToTeamModal = ({ open, handleClose, teamId }) => {
   React.useEffect(() => {
     register({ name: "email" }); // custom register react
   }, [register]);
-  const [addUserToTeam, { loading, error, data }] = useMutation(
-    ADD_USER_TO_TEAM,
-    {
-      onCompleted: ({ addUserToTeam }: any) => {
-        if (addUserToTeam.ok) handleClose(false);
-      },
-      onError: (err: any) => {
-        console.log("error: " + err);
-      },
-    }
-  );
+  const [addUserToTeam, { data }] = useMutation(ADD_USER_TO_TEAM, {
+    onCompleted: ({ addUserToTeam }: any) => {
+      if (addUserToTeam.ok) handleClose(false);
+    },
+    onError: (err: any) => {
+      console.log("error: " + err);
+    },
+  });
 
   return (
     <Modal open={open}>

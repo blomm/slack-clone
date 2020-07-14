@@ -37,11 +37,11 @@ export const MainView: React.FC<RouteComponentProps<any>> = ({
   let idInt = parseInt(params.teamId, 10);
   let channelInt = parseInt(params.channelId, 10);
 
-  const team = data.allTeams.find((t) => t.id == idInt)
-    ? data.allTeams.find((t) => t.id == idInt)
+  const team = data.allTeams.find((t) => t.id === idInt)
+    ? data.allTeams.find((t) => t.id === idInt)
     : data.allTeams[0];
-  const channel = team.channels.find((c) => c.id == channelInt)
-    ? team.channels.find((c) => c.id == channelInt)
+  const channel = team.channels.find((c) => c.id === channelInt)
+    ? team.channels.find((c) => c.id === channelInt)
     : team.channels[0];
   return (
     <AppLayout>
