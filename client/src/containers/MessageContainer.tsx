@@ -36,7 +36,10 @@ export const MessageContainer = ({ channelId }) => {
     });
 
   React.useEffect(() => {
-    subscribeToNewComments();
+    let unsub = subscribeToNewComments();
+    return () => {
+      unsub();
+    };
   }, [channelId]);
 
   if (error) {

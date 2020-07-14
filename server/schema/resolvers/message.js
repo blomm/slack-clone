@@ -5,12 +5,9 @@ const { withFilter } = require("apollo-server");
 
 const MESSAGE_ADDED = "MESSAGE_ADDED";
 
-// Provide resolver functions for your schema fields
 module.exports = {
   Subscription: {
     messageAdded: {
-      // Additional event labels can be passed to asyncIterator creation
-      // subscribe: () => pubsub.asyncIterator([MESSAGE_ADDED]),
       subscribe: withFilter(
         () => {
           return pubsub.asyncIterator(MESSAGE_ADDED);
@@ -19,6 +16,8 @@ module.exports = {
           console.log(
             `checking the filter: ${payload.channelId} and ${args.channelId} should match`
           );
+          // the args are what are passed in as variables
+          // in the subscribeToMore on the client side
           return payload.channelId === args.channelId;
         }
       ),
@@ -52,6 +51,7 @@ module.exports = {
             `adding new message: ${JSON.stringify(message.dataValues)}`
           );
           //pubsub.publish(MESSAGE_ADDED, { messageAdded: args });
+          // the second parameter is the payload in the subscribe: withFilter above
           pubsub.publish(MESSAGE_ADDED, {
             messageAdded: message.dataValues,
             channelId: args.channelId,
