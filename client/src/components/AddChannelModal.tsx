@@ -2,19 +2,10 @@ import React from "react";
 import { Message, Form, Input, Modal, Button } from "semantic-ui-react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/react-hooks";
-import { GET_TEAMS } from "../graphql/teams";
+//import { GET_TEAMS } from "../graphql/teams";
+import { ME } from "../graphql/users";
 import { CREATE_CHANNEL } from "../graphql/channels";
 import { useHistory } from "react-router-dom";
-
-interface TeamsResponse {
-  allTeams: {
-    id: number;
-    channels: {
-      id: number;
-      name: string;
-    }[];
-  }[];
-}
 
 export const AddChannelModal = ({ open, handleClose, teamId }) => {
   const history = useHistory();
@@ -44,12 +35,12 @@ export const AddChannelModal = ({ open, handleClose, teamId }) => {
           return;
         }
         // Read the data from our cache for this query.
-        let data = proxy.readQuery({ query: GET_TEAMS }) as TeamsResponse;
+        let data = proxy.readQuery({ query: ME }) as any; // as TeamsResponse;
         //add the new channel to the team
-        data.allTeams.find((t) => t.id === teamId).channels.push(channel);
+        data.me.teams.find((t) => t.id === teamId).channels.push(channel);
         // Write our data back to the cache with the new channel in it
         proxy.writeQuery({
-          query: GET_TEAMS,
+          query: ME,
           data,
         });
       },

@@ -6,14 +6,24 @@ const { authenticated } = require("../guards/auth-guard");
 
 // Provide resolver functions for your schema fields
 module.exports = {
+  User: {
+    teams: (_parent, _args, { models, user }, _server) =>
+      models.sequelize.query(
+        "select * from teams as team join user_team as member on team.id = member.team_id where member.user_id = ?",
+        {
+          replacements: [user.id],
+          model: models.team,
+        }
+      ),
+  },
   Query: {
     allUsers: authenticated(
       async (_parent, _args, { models, user }, _server) => {
         return await models.user.findAll();
       }
     ),
-    user: authenticated(async (_parent, { id }, { models, user }, _server) => {
-      return await models.user.findOne({ where: { id } });
+    me: authenticated(async (_parent, _args, { models, user }, _server) => {
+      return await models.user.findOne({ where: { id: user.id } });
     }),
   },
   Mutation: {

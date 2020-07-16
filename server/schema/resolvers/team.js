@@ -7,13 +7,14 @@ const models = require("../../models");
 // Provide resolver functions for your schema fields
 module.exports = {
   Query: {
+    // we don't really need all teams query anymore because we get the teams via the M
     allTeams: authenticated((_parent, _args, { models, user }, _server) =>
       // models.team.findAll({
       //   include: [{ model: models.user, where: { id: user.id } }],
       // })
       // raw query way
       models.sequelize.query(
-        "select * from teams join user_team on id = team_id where user_id = ?",
+        "select * from teams as team join user_team as member on team.id = member.team_id where member.user_id = ?",
         {
           replacements: [user.id],
           model: models.team,

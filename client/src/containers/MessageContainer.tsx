@@ -17,6 +17,7 @@ export const MessageContainer = ({ channelId }) => {
     GET_MESSAGES_FOR_CHANNEL,
     {
       variables: { channelId },
+      fetchPolicy: "network-only",
     }
   );
 

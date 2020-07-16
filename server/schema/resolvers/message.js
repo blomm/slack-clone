@@ -1,4 +1,7 @@
-const { authenticated } = require("../guards/auth-guard");
+const {
+  authenticated,
+  isMemberOfChannelsTeam,
+} = require("../guards/auth-guard");
 const { pubsub } = require("../pubsub");
 const { ApolloError } = require("apollo-server-express");
 const { withFilter } = require("apollo-server");
@@ -8,18 +11,20 @@ const MESSAGE_ADDED = "MESSAGE_ADDED";
 module.exports = {
   Subscription: {
     messageAdded: {
-      subscribe: withFilter(
-        () => {
-          return pubsub.asyncIterator(MESSAGE_ADDED);
-        },
-        (payload, args) => {
-          console.log(
-            `checking the filter: ${payload.channelId} and ${args.channelId} should match`
-          );
-          // the args are what are passed in as variables
-          // in the subscribeToMore on the client side
-          return payload.channelId === args.channelId;
-        }
+      subscribe: isMemberOfChannelsTeam(
+        withFilter(
+          () => {
+            return pubsub.asyncIterator(MESSAGE_ADDED);
+          },
+          (payload, args) => {
+            console.log(
+              `checking the filter: ${payload.channelId} and ${args.channelId} should match`
+            );
+            // the args are what are passed in as variables
+            // in the subscribeToMore on the client side
+            return payload.channelId === args.channelId;
+          }
+        )
       ),
     },
   },

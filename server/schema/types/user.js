@@ -14,7 +14,7 @@ module.exports = gql`
 
   type Query {
     allUsers: [User!]!
-    user(id: Int!): User!
+    me: User!
   }
 
   type RegisterResponse {
