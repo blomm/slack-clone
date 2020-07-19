@@ -4,17 +4,17 @@ const { formatErrors } = require("../formatErrors");
 module.exports = {
   Query: {
     channel: authenticated((_parent, { id }, { models }, _server) =>
-      models.channel.findOne({ where: { id } })
+      models.Channel.findOne({ where: { id } })
     ),
     allChannels: authenticated((_parent, _args, { models }, _server) =>
-      models.channel.findAll()
+      models.Channel.findAll()
     ),
   },
   Mutation: {
     createChannel: authenticated(
       isTeamOwner(async (_parent, args, { models }, _server) => {
         try {
-          const channel = await models.channel.create(args);
+          const channel = await models.Channel.create(args);
           return {
             response: true,
             channel,

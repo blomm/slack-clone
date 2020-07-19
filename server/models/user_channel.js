@@ -1,10 +1,10 @@
 "use strict";
 module.exports = (sequelize) => {
-  var User_channel = sequelize.define(
+  var User_Channel = sequelize.define(
     "user_channel",
     {},
     { freezeTableName: true }
   );
 
-  return User_channel;
+  return User_Channel;
 };

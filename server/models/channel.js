@@ -6,12 +6,12 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Channel.associate = function (models) {
-    // models.channel.hasOne(models.team);
+    // models.Channel.hasOne(models.Team);
     // this is a 1:M
-    models.channel.hasMany(models.message);
+    models.Channel.hasMany(models.Message);
 
     // M:M
-    models.channel.belongsToMany(models.user, { through: models.user_channel });
+    models.Channel.belongsToMany(models.User, { through: models.User_Channel });
   };
 
   return Channel;

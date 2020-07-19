@@ -33,7 +33,7 @@ module.exports = {
     // decode the refresh token
     let payload = jwt.decode(refreshToken); //verifyToken(refreshToken, passwordRefreshSecret);
     //throw new ApolloError(`REFRESH_PAYLOAD ${payload}`, 401);
-    let user = await models.user.findOne({
+    let user = await models.User.findOne({
       where: { id: payload.user.id },
     });
     if (!user) {

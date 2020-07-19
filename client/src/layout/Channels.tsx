@@ -49,7 +49,6 @@ const Bubble = ({ on = true }) => {
 interface ChannelProps {
   team: Team;
   user: any;
-  users: any;
   onAddChannelClick: any;
   onInvitePeopleClick: any;
 }
@@ -57,6 +56,7 @@ interface ChannelProps {
 interface Team {
   id: number;
   owner: any;
+  members: any[];
   name: string;
   channels: any[];
 }
@@ -64,7 +64,6 @@ interface Team {
 export const Channels: React.FC<ChannelProps> = ({
   team,
   user,
-  users,
   onAddChannelClick,
   onInvitePeopleClick,
 }) => {
@@ -83,19 +82,23 @@ export const Channels: React.FC<ChannelProps> = ({
         ) : null}
       </ChannelSubHeader>
       <ChannelList>
-        {team.channels.map((c, i) => (
-          <Link to={`/view-team/${team.id}/${c.id}`} key={i}>
-            <ChannelListItem># {c.name}</ChannelListItem>
+        {team.channels.map((channel, i) => (
+          <Link to={`/view-team/${team.id}/chan/${channel.id}`} key={i}>
+            <ChannelListItem># {channel.name}</ChannelListItem>
           </Link>
         ))}
       </ChannelList>
       <ChannelSubHeader>Direct messages</ChannelSubHeader>
       <ChannelList>
-        {users.map((u, i) => (
-          <ChannelListItem key={i}>
-            <Bubble on={false} /> {u.name}
-          </ChannelListItem>
-        ))}
+        {team.members.map((member, i) =>
+          member.id !== user.id ? (
+            <Link to={`/view-team/${team.id}/dm/${member.id}`} key={i}>
+              <ChannelListItem key={i}>
+                <Bubble on={false} /> {member.username}
+              </ChannelListItem>
+            </Link>
+          ) : null
+        )}
       </ChannelList>
       {isOwner ? (
         <div style={{ paddingLeft: 10 }}>

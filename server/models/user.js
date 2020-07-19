@@ -51,17 +51,17 @@ module.exports = (sequelize, DataTypes) => {
 
   User.associate = function (models) {
     // M:M
-    models.user.belongsToMany(models.team, { through: models.user_team });
+    models.User.belongsToMany(models.Team, { through: models.User_Team });
 
     // M:M
-    models.user.belongsToMany(models.channel, { through: models.user_channel });
+    models.User.belongsToMany(models.Channel, { through: models.User_Channel });
 
     // 1:M
-    models.user.hasMany(models.message);
+    models.User.hasMany(models.Message);
 
     // this will add a 'owner_id' field to teams
     // with a reference to userId
-    models.user.hasOne(models.team, { foreignKey: "owner_id" });
+    models.User.hasOne(models.Team, { foreignKey: "owner_id" });
   };
 
   return User;

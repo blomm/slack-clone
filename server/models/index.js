@@ -38,12 +38,13 @@ var sequelize = new Sequelize(
 //     db[model.name] = model;
 //   });
 var models = {
-  user: sequelize.import("./user"),
-  channel: sequelize.import("./channel"),
-  message: sequelize.import("./message"),
-  team: sequelize.import("./team"),
-  user_team: sequelize.import("./user_team"),
-  user_channel: sequelize.import("./user_channel"),
+  User: sequelize.import("./user"),
+  Channel: sequelize.import("./channel"),
+  Message: sequelize.import("./message"),
+  Team: sequelize.import("./team"),
+  DirectMessage: sequelize.import("./directMessage"),
+  User_Team: sequelize.import("./user_team"),
+  User_Channel: sequelize.import("./user_channel"),
 };
 
 Object.keys(models).forEach((modelName) => {

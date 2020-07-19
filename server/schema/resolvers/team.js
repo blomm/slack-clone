@@ -9,40 +9,43 @@ module.exports = {
   Query: {
     // we don't really need all teams query anymore because we get the teams via the M
     allTeams: authenticated((_parent, _args, { models, user }, _server) =>
-      // models.team.findAll({
-      //   include: [{ model: models.user, where: { id: user.id } }],
+      // models.Team.findAll({
+      //   include: [{ model: models.User, where: { id: user.id } }],
       // })
       // raw query way
       models.sequelize.query(
         "select * from teams as team join user_team as member on team.id = member.team_id where member.user_id = ?",
         {
           replacements: [user.id],
-          model: models.team,
+          model: models.Team,
         }
       )
     ),
     ownedTeams: authenticated((_parent, _args, { models, user }, _server) =>
-      models.team.findAll({ where: { owner_id: user.id } })
+      models.Team.findAll({ where: { owner_id: user.id } })
     ),
     team: authenticated((_parent, { id }, { models }, _server) =>
-      models.team.findOne({ where: { id } })
+      models.Team.findOne({ where: { id } })
     ),
   },
   Team: {
     owner: (parent, _args, { models }, _server) =>
-      models.user.findOne({ where: { id: parent.owner_id } }),
+      models.User.findOne({ where: { id: parent.owner_id } }),
     channels: (parent, _args, { models }, _server) =>
-      models.channel.findAll({ where: { team_id: parent.id } }),
-    // users: (parent, _args, { models }, _server) =>
-    //   models.user.findAll()
+      models.Channel.findAll({ where: { team_id: parent.id } }),
+    members: async (parent, _args, { models }, _server) => {
+      return await models.User.findAll({
+        include: [{ model: models.Team, where: { id: parent.id } }],
+      });
+    },
   },
   Mutation: {
     addUserToTeam: authenticated(
       isTeamOwner(
         async (_parent, { email, teamId }, { models, user }, _server) => {
           try {
-            const userToAddPromise = models.user.findOne({ where: { email } });
-            const teamToAddToPromise = models.team.findOne({
+            const userToAddPromise = models.User.findOne({ where: { email } });
+            const teamToAddToPromise = models.Team.findOne({
               where: { id: teamId },
             });
 
@@ -74,7 +77,7 @@ module.exports = {
               };
             }
 
-            const { user_id, team_id } = await models.user_team.create({
+            const { user_id, team_id } = await models.User_Team.create({
               userId: userToAdd.id,
               teamId,
             });
@@ -92,17 +95,17 @@ module.exports = {
       async (_parent, args, { models, user }, _server) => {
         try {
           const team = await models.sequelize.transaction(async () => {
-            const newTeam = await models.team.create({
+            const newTeam = await models.Team.create({
               ...args,
               owner_id: user.id,
             });
 
-            await models.channel.create({
+            await models.Channel.create({
               name: "general",
               public: true,
               teamId: newTeam.id,
             });
-            await models.user_team.create({
+            await models.User_Team.create({
               userId: user.id,
               teamId: newTeam.id,
             });

@@ -22,11 +22,11 @@ module.exports = {
     { models, user },
     server
   ) => {
-    const team = await models.channel.findOne({
+    const team = await models.Channel.findOne({
       where: { id: args.channelId },
     });
     // check if user belongs to channel, and channel belongs to team
-    const dbUser = await models.user_team.findOne({
+    const dbUser = await models.User_Team.findOne({
       where: { user_id: user.id, team_id: team.teamId },
     });
     if (!dbUser) {
@@ -36,7 +36,7 @@ module.exports = {
     return next(parent, args, { models, user }, server);
   },
   isTeamOwner: (next) => async (parent, args, { models, user }, server) => {
-    const team = await models.team.findOne({ where: { id: args.teamId } });
+    const team = await models.Team.findOne({ where: { id: args.teamId } });
     if (team.owner_id !== user.id) {
       throw new ApolloError(
         `User ${user.username} is not owner of team ${team.name}`

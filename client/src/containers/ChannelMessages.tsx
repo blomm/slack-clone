@@ -4,7 +4,6 @@ import {
   GET_MESSAGES_FOR_CHANNEL,
   MESSAGES_SUBSCRIPTION,
 } from "../graphql/messages";
-import { Messages } from "../layout/Messages";
 import { Comment } from "semantic-ui-react";
 import styled from "styled-components";
 
@@ -12,7 +11,20 @@ const StyledComment = styled(Comment)`
   padding-bottom: 10px;
 `;
 
-export const MessageContainer = ({ channelId }) => {
+const MessagesWrapper = styled.div`
+  grid-column: 3;
+  grid-row: 2;
+  padding: 20px;
+  display: flex;
+  flex-direction: column-reverse;
+  overflow-y: auto;
+`;
+
+// export const Messages: React.FC = ({ children }) => {
+//   return <MessagesWrapper>{children}</MessagesWrapper>;
+// };
+
+export const ChannelMessages = ({ channelId }) => {
   const { data, error, loading, subscribeToMore } = useQuery(
     GET_MESSAGES_FOR_CHANNEL,
     {
@@ -51,7 +63,7 @@ export const MessageContainer = ({ channelId }) => {
   }
 
   return (
-    <Messages>
+    <MessagesWrapper>
       {data && data.channelMessages
         ? data.channelMessages.map((m, index) => (
             <StyledComment key={index}>
@@ -78,6 +90,6 @@ export const MessageContainer = ({ channelId }) => {
             </StyledComment>
           ))
         : null}
-    </Messages>
+    </MessagesWrapper>
   );
 };

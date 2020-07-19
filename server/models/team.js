@@ -6,13 +6,13 @@ module.exports = (sequelize, DataTypes) => {
 
   Team.associate = function (models) {
     // this will be a many to many
-    models.team.belongsToMany(models.user, { through: models.user_team });
+    models.Team.belongsToMany(models.User, { through: models.User_Team });
     // this will be a one to one
-    // models.team.hasOne(models.user, { as: "owner" });
+    // models.Team.hasOne(models.User, { as: "owner" });
     // this will be a one to many
-    models.team.hasMany(models.channel);
+    models.Team.hasMany(models.Channel);
     // this is defining the owner
-    //models.team.belongsTo(models.user);
+    //models.Team.belongsTo(models.User);
   };
 
   return Team;

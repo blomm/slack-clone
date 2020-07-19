@@ -3,7 +3,7 @@ import { Input, Form } from "semantic-ui-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@apollo/react-hooks";
-import { CREATE_MESSAGE } from "../graphql/messages";
+import { CREATE_DIRECT_MESSAGE } from "../graphql/directMessages";
 
 const SendMessageWrapper = styled.div`
   grid-column: 3;
@@ -11,15 +11,16 @@ const SendMessageWrapper = styled.div`
   margin: 20px;
 `;
 
-export default ({ channelname, channelId }) => {
-  const [createMessage] = useMutation(CREATE_MESSAGE);
+export default ({ recipient, teamId }) => {
+  const [createMessage] = useMutation(CREATE_DIRECT_MESSAGE);
   const { register, handleSubmit, setValue } = useForm();
 
   const onSubmit = async (data, e) => {
     await createMessage({
       variables: {
         text: data.messageInput,
-        channelId,
+        to: recipient.id,
+        teamId,
       },
     });
     // https://react-hook-form.com/api#reset
@@ -47,7 +48,7 @@ export default ({ channelname, channelId }) => {
               }
             }}
             fluid
-            placeholder={`Message #${channelname}`}
+            placeholder={`Message #${recipient.username}`}
           />
         </Form.Field>
       </Form>

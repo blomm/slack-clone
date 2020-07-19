@@ -13,6 +13,11 @@ export const ME = gql`
           id
           email
         }
+        members {
+          id
+          username
+          email
+        }
         channels {
           id
           name

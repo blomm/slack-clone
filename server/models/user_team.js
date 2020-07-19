@@ -1,6 +1,6 @@
 "use strict";
 module.exports = (sequelize) => {
-  var User_team = sequelize.define("user_team", {}, { freezeTableName: true });
+  var User_Team = sequelize.define("user_team", {}, { freezeTableName: true });
 
-  return User_team;
+  return User_Team;
 };

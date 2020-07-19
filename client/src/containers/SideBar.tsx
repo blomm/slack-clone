@@ -25,17 +25,12 @@ export const SideBar = ({ currentTeam, teams }) => {
   const handleAddUserToTeam = (val: boolean) => {
     setAddUserToTeamModalOpen(val);
   };
-
   return (
     <>
       <Teams teams={teams}></Teams>
       <Channels
         team={currentTeam}
         user={user}
-        users={[
-          { id: 1, name: "slackbot" },
-          { id: 2, name: "user 2" },
-        ]}
         onAddChannelClick={handleAddChannel}
         onInvitePeopleClick={handleAddUserToTeam}
       ></Channels>

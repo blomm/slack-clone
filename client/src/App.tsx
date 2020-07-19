@@ -99,8 +99,9 @@ function App() {
           <Route exact path="/register" component={Register}></Route>
           <Route exact path="/users" component={Users}></Route>
           <Route exact path="/login" component={Login}></Route>
+
           <PrivateRouteComponent
-            path="/view-team/:teamId?/:channelId?"
+            path="/view-team/:teamId?/:type?"
             component={MainView}
           />
           <PrivateRoute path="/create-team">

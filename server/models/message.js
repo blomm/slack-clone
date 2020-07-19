@@ -7,14 +7,14 @@ module.exports = (sequelize, DataTypes) => {
   // we've describe the associate in
   // the user and channel
   Message.associate = function (models) {
-    Message.belongsTo(models.channel);
+    Message.belongsTo(models.Channel);
     // , {
     //   foreignKey: {
     //     name: 'channelId',
     //     field: 'channel_id',
     //   },
     // });
-    Message.belongsTo(models.user);
+    Message.belongsTo(models.User);
     //   {
     //   foreignKey: {
     //     name: 'userId',
@@ -22,9 +22,9 @@ module.exports = (sequelize, DataTypes) => {
     //   },
     // });
     // //this will be a 1:1
-    // models.message.hasOne(models.user);
+    // models.Message.hasOne(models.User);
     // //this will be a one to one
-    // models.message.hasOne(models.channel);
+    // models.Message.hasOne(models.Channel);
   };
 
   return Message;

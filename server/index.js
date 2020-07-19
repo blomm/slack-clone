@@ -38,7 +38,7 @@ const server = new ApolloServer({
       const refresh_token = connection.context.refreshToken;
       const token = connection.context.authToken;
 
-      console.log(`refresh: ${refresh_token} and auth: ${token}`);
+      //console.log(`refresh: ${refresh_token} and auth: ${token}`);
 
       let payload = {};
       try {
@@ -46,7 +46,7 @@ const server = new ApolloServer({
           payload = jwt.verify(token, auth_secret);
         } else if (refresh_token) {
           let decoded_refresh = jwt.decode(refresh_token);
-          let user = await models.user.findOne({
+          let user = await models.User.findOne({
             where: { id: decoded_refresh.user.id },
           });
           const passwordRefreshSecret = user.password + refresh_secret;

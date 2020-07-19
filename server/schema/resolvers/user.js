@@ -12,18 +12,18 @@ module.exports = {
         "select * from teams as team join user_team as member on team.id = member.team_id where member.user_id = ?",
         {
           replacements: [user.id],
-          model: models.team,
+          model: models.Team,
         }
       ),
   },
   Query: {
     allUsers: authenticated(
       async (_parent, _args, { models, user }, _server) => {
-        return await models.user.findAll();
+        return await models.User.findAll();
       }
     ),
     me: authenticated(async (_parent, _args, { models, user }, _server) => {
-      return await models.user.findOne({ where: { id: user.id } });
+      return await models.User.findOne({ where: { id: user.id } });
     }),
   },
   Mutation: {
@@ -33,7 +33,7 @@ module.exports = {
       { models, auth_secret, refresh_secret },
       _server
     ) => {
-      let user = await models.user.findOne({
+      let user = await models.User.findOne({
         where: { email },
       });
 
@@ -58,7 +58,7 @@ module.exports = {
       _server
     ) => {
       try {
-        const user = await models.user.create(args);
+        const user = await models.User.create(args);
 
         const { refreshToken, authToken } = auth.createTokens(
           user,

@@ -8,13 +8,13 @@ const HeaderWrapper = styled.div`
 `;
 
 interface HeaderProps {
-  channelName: string;
+  titletext: string;
 }
 
-export default (({ channelName }) => {
+export default (({ titletext }) => {
   return (
     <HeaderWrapper>
-      <Header textAlign="center"># {channelName}</Header>
+      <Header textAlign="center"># {titletext}</Header>
     </HeaderWrapper>
   );
 }) as React.FC<HeaderProps>;

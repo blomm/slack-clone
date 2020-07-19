@@ -17,9 +17,6 @@ module.exports = {
             return pubsub.asyncIterator(MESSAGE_ADDED);
           },
           (payload, args) => {
-            console.log(
-              `checking the filter: ${payload.channelId} and ${args.channelId} should match`
-            );
             // the args are what are passed in as variables
             // in the subscribeToMore on the client side
             return payload.channelId === args.channelId;
@@ -30,11 +27,11 @@ module.exports = {
   },
   Query: {
     message: authenticated((_parent, { id }, { models }, _server) =>
-      models.message.findOne({ where: { id } })
+      models.Message.findOne({ where: { id } })
     ),
     channelMessages: authenticated(
       (_parent, { channelId }, { models }, _server) =>
-        models.message.findAll({
+        models.Message.findAll({
           order: [["createdAt", "DESC"]],
           where: { channelId },
         })
@@ -42,13 +39,13 @@ module.exports = {
   },
   Message: {
     user: (parent, _args, { models }, _server) =>
-      models.user.findOne({ where: { id: parent.userId } }),
+      models.User.findOne({ where: { id: parent.userId } }),
   },
   Mutation: {
     createMessage: authenticated(
       async (_parent, args, { models, user }, _server) => {
         try {
-          const message = await models.message.create({
+          const message = await models.Message.create({
             ...args,
             userId: user.id,
           });

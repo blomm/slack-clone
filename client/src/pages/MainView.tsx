@@ -3,11 +3,13 @@ import { AppLayout } from "../layout/AppLayout";
 import Header from "../layout/Header";
 import SendMessage from "../layout/SendMessage";
 import { SideBar } from "../containers/SideBar";
+import { GET_TEAMS } from "../graphql/teams";
 import { ME } from "../graphql/users";
 import { useQuery } from "@apollo/react-hooks";
 import { Container, Message } from "semantic-ui-react";
-import { RouteComponentProps, Redirect } from "react-router-dom";
-import { MessageContainer } from "../containers/MessageContainer";
+import { RouteComponentProps, Redirect, Route } from "react-router-dom";
+import { ChannelMessageContainer } from "../containers/ChannelMessageContainer";
+import { DirectMessageContainer } from "../containers/DirectMessageContainer";
 
 export const MainView: React.FC<RouteComponentProps<any>> = ({
   match: { params },
@@ -34,14 +36,13 @@ export const MainView: React.FC<RouteComponentProps<any>> = ({
   }
 
   let idInt = parseInt(params.teamId, 10);
-  let channelInt = parseInt(params.channelId, 10);
+  let type =
+    params.type === "chan" || params.type === "dm" ? params.type : "chan";
 
   const team = data.me.teams.find((t) => t.id === idInt)
     ? data.me.teams.find((t) => t.id === idInt)
     : data.me.teams[0];
-  const channel = team.channels.find((c) => c.id === channelInt)
-    ? team.channels.find((c) => c.id === channelInt)
-    : team.channels[0];
+
   return (
     <AppLayout>
       <SideBar
@@ -50,12 +51,29 @@ export const MainView: React.FC<RouteComponentProps<any>> = ({
         })}
         currentTeam={team}
       ></SideBar>
-      {channel && <Header channelName={channel.name} />}
-      {channel && <MessageContainer channelId={channel.id} />}
-      <SendMessage
-        channelName={channel.name}
-        channelId={channel.id}
-      ></SendMessage>
+      {type === "chan" ? (
+        <Route
+          path={`/view-team/:teamId?/chan/:channelId?`}
+          exact
+          render={(props) => (
+            <ChannelMessageContainer
+              {...props}
+              channels={team.channels}
+            ></ChannelMessageContainer>
+          )}
+        ></Route>
+      ) : (
+        <Route
+          path={`/view-team/:teamId?/dm/:memberId?`}
+          exact
+          render={(props) => (
+            <DirectMessageContainer
+              {...props}
+              members={team.members}
+            ></DirectMessageContainer>
+          )}
+        ></Route>
+      )}
     </AppLayout>
   );
 };
