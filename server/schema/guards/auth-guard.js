@@ -15,6 +15,13 @@ module.exports = {
 
     return next(parent, args, context, server);
   },
+  isPartOfConversation: (next) => (parent, args, { models, user }, server) => {
+    if (user.id === args.myId || user.id === args.recipientId) {
+      return next(parent, args, { models, user }, server);
+    } else {
+      throw new ApolloError(`Unauthorised to subscribe to this conversation`);
+    }
+  },
   // is a user a member of a given channel's team?
   isMemberOfChannelsTeam: (next) => async (
     parent,
