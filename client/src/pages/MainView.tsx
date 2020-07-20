@@ -36,8 +36,8 @@ export const MainView: React.FC<RouteComponentProps<any>> = ({
   }
 
   let idInt = parseInt(params.teamId, 10);
-  let type =
-    params.type === "chan" || params.type === "dm" ? params.type : "chan";
+  // let type =
+  //   params.type === "chan" || params.type === "dm" ? params.type : "chan";
 
   const team = data.me.teams.find((t) => t.id === idInt)
     ? data.me.teams.find((t) => t.id === idInt)
@@ -51,29 +51,26 @@ export const MainView: React.FC<RouteComponentProps<any>> = ({
         })}
         currentTeam={team}
       ></SideBar>
-      {type === "chan" ? (
-        <Route
-          path={`/view-team/:teamId?/chan/:channelId?`}
-          exact
-          render={(props) => (
-            <ChannelMessageContainer
-              {...props}
-              channels={team.channels}
-            ></ChannelMessageContainer>
-          )}
-        ></Route>
-      ) : (
-        <Route
-          path={`/view-team/:teamId?/dm/:memberId?`}
-          exact
-          render={(props) => (
-            <DirectMessageContainer
-              {...props}
-              members={team.members}
-            ></DirectMessageContainer>
-          )}
-        ></Route>
-      )}
+      <Route
+        path={`/view-team/:teamId?/chan/:channelId?`}
+        exact
+        render={(props) => (
+          <ChannelMessageContainer
+            {...props}
+            channels={team.channels}
+          ></ChannelMessageContainer>
+        )}
+      ></Route>
+      <Route
+        path={`/view-team/:teamId?/dm/:memberId?`}
+        exact
+        render={(props) => (
+          <DirectMessageContainer
+            {...props}
+            members={team.members}
+          ></DirectMessageContainer>
+        )}
+      ></Route>
     </AppLayout>
   );
 };

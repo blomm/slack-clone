@@ -101,7 +101,7 @@ function App() {
           <Route exact path="/login" component={Login}></Route>
 
           <PrivateRouteComponent
-            path="/view-team/:teamId?/:type?"
+            path="/view-team/:teamId?"
             component={MainView}
           />
           <PrivateRoute path="/create-team">
