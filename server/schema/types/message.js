@@ -8,7 +8,7 @@ module.exports = gql`
   type Message {
     id: Int!
     text: String!
-    user: User
+    user: User!
     channel: Channel
     createdAt: String!
   }
@@ -18,7 +18,7 @@ module.exports = gql`
   }
 
   type Query {
-    channelMessages(channelId: Int!): [Message]!
+    channelMessages(channelId: Int!): [Message!]
     message(id: Int!): Message!
   }
 

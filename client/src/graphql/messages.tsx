@@ -24,7 +24,9 @@ export const MESSAGES_SUBSCRIPTION = gql`
     messageAdded(channelId: $channelId) {
       id
       text
-
+      user {
+        username
+      }
       createdAt
     }
   }

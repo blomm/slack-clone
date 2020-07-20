@@ -35,13 +35,11 @@ module.exports = {
       async (_parent, args, { models, user }, _server) => {
         const toMe = await models.DirectMessage.findAll({
           where: {
-            //[Op.and]: [{ to: args.from }, { from: user.id }],
             [Op.and]: [{ to: user.id }, { from: args.recipientId }],
           },
         });
         const fromMe = await models.DirectMessage.findAll({
           where: {
-            //[Op.and]: [{ to: args.from }, { from: user.id }],
             [Op.and]: [{ to: args.recipientId }, { from: user.id }],
           },
         });

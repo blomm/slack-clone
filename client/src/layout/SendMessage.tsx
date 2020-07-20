@@ -2,8 +2,6 @@ import styled from "styled-components";
 import { Input, Form } from "semantic-ui-react";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@apollo/react-hooks";
-import { CREATE_MESSAGE } from "../graphql/messages";
 
 const SendMessageWrapper = styled.div`
   grid-column: 3;
@@ -11,20 +9,10 @@ const SendMessageWrapper = styled.div`
   margin: 20px;
 `;
 
-export default ({ channelname, channelId }) => {
-  const [createMessage] = useMutation(CREATE_MESSAGE);
+export default ({ placeholder, messageSubmitted }) => {
   const { register, handleSubmit, setValue } = useForm();
 
-  const onSubmit = async (data, e) => {
-    await createMessage({
-      variables: {
-        text: data.messageInput,
-        channelId,
-      },
-    });
-    // https://react-hook-form.com/api#reset
-    e.target.reset();
-  };
+  const onSubmit = messageSubmitted;
 
   React.useEffect(() => {
     register({ name: "messageInput" }); // custom register
@@ -47,7 +35,7 @@ export default ({ channelname, channelId }) => {
               }
             }}
             fluid
-            placeholder={`Message #${channelname}`}
+            placeholder={`Message #${placeholder}`}
           />
         </Form.Field>
       </Form>

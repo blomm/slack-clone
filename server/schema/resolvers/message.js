@@ -14,12 +14,12 @@ module.exports = {
       subscribe: isMemberOfChannelsTeam(
         withFilter(
           () => {
-            return pubsub.asyncIterator(MESSAGE_ADDED);
+            return pubsub.asyncIterator([MESSAGE_ADDED]);
           },
-          (payload, args) => {
+          ({ messageAdded }, args) => {
             // the args are what are passed in as variables
             // in the subscribeToMore on the client side
-            return payload.channelId === args.channelId;
+            return messageAdded.channelId === args.channelId;
           }
         )
       ),
@@ -38,8 +38,11 @@ module.exports = {
     ),
   },
   Message: {
-    user: (parent, _args, { models }, _server) =>
-      models.User.findOne({ where: { id: parent.userId } }),
+    user: async (parent, _args, { models }, _server) => {
+      const user = await models.User.findOne({ where: { id: parent.userId } });
+      console.log(`looking for a user, found: ${JSON.stringify(user)}`);
+      return user;
+    },
   },
   Mutation: {
     createMessage: authenticated(
@@ -56,12 +59,10 @@ module.exports = {
           // the second parameter is the payload in the subscribe: withFilter above
           pubsub.publish(MESSAGE_ADDED, {
             messageAdded: message.dataValues,
-            channelId: args.channelId,
           });
 
           return true;
         } catch (error) {
-          //throw new ApolloError(error);
           return false;
         }
       }
