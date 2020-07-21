@@ -33,25 +33,16 @@ module.exports = {
   Query: {
     directMessages: authenticated(
       async (_parent, args, { models, user }, _server) => {
-        const toMe = await models.DirectMessage.findAll({
+        const DMs = await models.DirectMessage.findAll({
           where: {
-            [Op.and]: [
-              { to: user.id },
-              { from: args.recipientId },
-              { teamId: args.teamId },
+            teamId: args.teamId,
+            [Op.or]: [
+              { [Op.and]: [{ to: user.id }, { from: args.recipientId }] },
+              { [Op.and]: [{ to: args.recipientId }, { from: user.id }] },
             ],
           },
         });
-        const fromMe = await models.DirectMessage.findAll({
-          where: {
-            [Op.and]: [
-              { to: args.recipientId },
-              { from: user.id },
-              { teamId: args.teamId },
-            ],
-          },
-        });
-        return [...toMe, ...fromMe].sort(function (a, b) {
+        return DMs.sort(function (a, b) {
           return new Date(b.createdAt) - new Date(a.createdAt);
         });
       }
