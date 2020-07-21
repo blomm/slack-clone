@@ -34,6 +34,7 @@ module.exports = {
     directMessages: authenticated(
       async (_parent, args, { models, user }, _server) => {
         const DMs = await models.DirectMessage.findAll({
+          order: [["createdAt", "DESC"]],
           where: {
             teamId: args.teamId,
             [Op.or]: [
@@ -42,9 +43,7 @@ module.exports = {
             ],
           },
         });
-        return DMs.sort(function (a, b) {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        });
+        return DMs;
       }
     ),
   },

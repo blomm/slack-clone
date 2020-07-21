@@ -21,6 +21,11 @@ export const AddUserToTeamModal = ({ open, handleClose, teamId }) => {
   const onSubmit = ({ email }) => {
     addUserToTeam({
       variables: { email, teamId },
+      // TODO: set up addUserToTeam to return the user
+      // so we can update the frontend
+      // update: (proxy, { data: { addUserToTeam } }) => {
+
+      // },
     });
   };
   const handleChange = (e) => {

@@ -57,12 +57,11 @@ export const Team = () => {
       },
       update: (proxy, { data: { createTeam } }) => {
         const { ok, team } = createTeam;
-        debugger;
         if (!ok) {
           return;
         }
         // Read the data from our cache for this query.
-        let data = proxy.readQuery({ query: ME }) as any; // as TeamsResponse;
+        const data = proxy.readQuery({ query: ME }) as any; // as TeamsResponse;
         //add the new channel to the team
         data.me.teams.push(team);
         // Write our data back to the cache with the new channel in it
