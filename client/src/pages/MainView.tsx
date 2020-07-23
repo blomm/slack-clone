@@ -5,7 +5,7 @@ import SendMessage from "../layout/SendMessage";
 import { SideBar } from "../containers/SideBar";
 import { GET_TEAMS } from "../graphql/teams";
 import { ME } from "../graphql/users";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 import { Container, Message } from "semantic-ui-react";
 import { RouteComponentProps, Redirect, Route } from "react-router-dom";
 import { ChannelMessageContainer } from "../containers/ChannelMessageContainer";

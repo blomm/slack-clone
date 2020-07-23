@@ -3,16 +3,20 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
-import { WebSocketLink } from "apollo-link-ws";
-import { split } from "apollo-link";
-import { getMainDefinition } from "apollo-utilities";
+import { WebSocketLink } from "@apollo/client/link/ws";
+import { getMainDefinition } from "@apollo/client/utilities";
 
-import { ApolloClient } from "apollo-client";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { HttpLink } from "apollo-link-http";
-import { onError } from "apollo-link-error";
-import { ApolloLink, Observable } from "apollo-link";
-import { ApolloProvider } from "@apollo/react-hooks";
+import { ApolloClient } from "@apollo/client";
+import { ApolloCache, InMemoryCache } from "@apollo/client/cache";
+import { onError } from "@apollo/client/link/error";
+
+import {
+  ApolloProvider,
+  ApolloLink,
+  Observable,
+  split,
+  HttpLink,
+} from "@apollo/client";
 
 import "semantic-ui-css/semantic.min.css";
 import { getAccessToken, setAccessToken } from "./token";

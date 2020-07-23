@@ -7,30 +7,17 @@ import {
   Container,
   Header,
 } from "semantic-ui-react";
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
 import gql from "graphql-tag";
 import { useHistory } from "react-router";
 import { setAccessToken } from "../token";
-
-const REGISTER = gql`
-  mutation register($username: String!, $email: String!, $password: String!) {
-    register(username: $username, email: $email, password: $password) {
-      ok
-      authToken
-      refreshToken
-      errors {
-        path
-        message
-      }
-    }
-  }
-`;
+import { REGISTER } from "../graphql/users";
 
 export const Register = () => {
   //useHistory Hook
   const history = useHistory();
 
-  const [register, { loading: mutationLoading }] = useMutation(REGISTER, {
+  const [register, { loading, data, error }] = useMutation(REGISTER, {
     onCompleted: (data: any) => {
       const { ok, errors } = data.register;
       if (errors) {
@@ -108,9 +95,13 @@ export const Register = () => {
           />
         </Form.Field>
 
-        <Button content="Submit" onClick={handleClick} />
+        <Button
+          data-testid="submit-button"
+          content="Submit"
+          onClick={handleClick}
+        />
       </Form>
-      {mutationLoading && <p>Loading...</p>}
+      {loading && <p>Loading...</p>}
       {registerDetails.errors.length ? (
         <Message
           error

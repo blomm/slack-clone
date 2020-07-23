@@ -1,7 +1,7 @@
 import React from "react";
 import { Message, Form, Input, Modal, Button } from "semantic-ui-react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
 //import { GET_TEAMS } from "../graphql/teams";
 import { ME } from "../graphql/users";
 import { CREATE_CHANNEL } from "../graphql/channels";

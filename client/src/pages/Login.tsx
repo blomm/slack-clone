@@ -7,19 +7,10 @@ import {
   Header,
   Form,
 } from "semantic-ui-react";
-import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
+import { useMutation } from "@apollo/client";
 import { setAccessToken } from "../token";
 import { useHistory } from "react-router-dom";
-
-const LOGIN = gql`
-  mutation login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      authToken
-      refreshToken
-    }
-  }
-`;
+import { LOGIN } from "../graphql/users";
 
 export const Login = () => {
   const history = useHistory();
@@ -29,23 +20,19 @@ export const Login = () => {
     password: "",
   });
 
-  const [login, { loading: loginLoading, error: loginError }] = useMutation(
-    LOGIN,
-    {
-      // While you can use the exposed error state to update
-      // your UI, doing so is not a substitute for actually handling
-      // the error. You must either provide an onError callback
-      // or catch the error
-      onError: (err: any) => {},
-      onCompleted: (data: any) => {
-        // TODO: store the refreshToken somewhere
-        setAccessToken(data.login.authToken);
-        localStorage.setItem("REFRESH_TOKEN", data.login.refreshToken);
-
-        history.push("/view-team");
-      },
-    }
-  );
+  const [login, { loading, error }] = useMutation(LOGIN, {
+    // While you can use the exposed error state to update
+    // your UI, doing so is not a substitute for actually handling
+    // the error. You must either provide an onError callback
+    // or catch the error
+    onError: (err: any) => {},
+    onCompleted: (data: any) => {
+      // TODO: store the refreshToken somewhere
+      setAccessToken(data.login.authToken);
+      localStorage.setItem("REFRESH_TOKEN", data.login.refreshToken);
+      history.push("/view-team");
+    },
+  });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -88,13 +75,14 @@ export const Login = () => {
             placeholder="Password"
           />
         </Form.Field>
-        <Button content="Submit" onClick={handleSubmit} />
-        {loginLoading && <p>Loading...</p>}
-        {loginError && loginError.graphQLErrors.length ? (
-          <Message
-            error
-            list={loginError.graphQLErrors.map((err) => err.message)}
-          />
+        <Button
+          content="Submit"
+          data-testid="login-submit"
+          onClick={handleSubmit}
+        />
+        {loading ? <p>Loading...</p> : null}
+        {error && error.graphQLErrors ? (
+          <Message error list={error.graphQLErrors.map((err) => err.message)} />
         ) : null}
       </Form>
     </Container>

@@ -3,7 +3,7 @@ import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import Header from "../layout/Header";
 import SendMessage from "../layout/SendMessage";
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
 import { CREATE_DIRECT_MESSAGE } from "../graphql/directMessages";
 
 interface DirectMessageContainerProps extends RouteComponentProps {

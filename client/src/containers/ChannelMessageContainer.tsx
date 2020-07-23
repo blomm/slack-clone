@@ -3,7 +3,7 @@ import { ChannelMessages } from "./ChannelMessages";
 import SendMessage from "../layout/SendMessage";
 import { RouteComponentProps } from "react-router-dom";
 import Header from "../layout/Header";
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/client";
 import { CREATE_MESSAGE } from "../graphql/messages";
 
 interface MessageContainerProps extends RouteComponentProps {
